@@ -79,7 +79,7 @@ AVAILABLE CATEGORIES:
 
 GUIDELINES:
 - Only recommend products that exist in our catalog above
-- Include product names and prices in recommendations
+- Copy the exact full catalog product name and include its price in every recommendation
 - If asked about products we don't have, politely say so and suggest alternatives
 - Keep responses concise but helpful
 - Use a friendly, student-oriented tone
@@ -105,11 +105,18 @@ GUIDELINES:
     $response = callGeminiAPI($messages);
     
     if ($response['success']) {
-        jsonResponse(true, 'Response generated', ['reply' => $response['text']]);
+        jsonResponse(true, 'Response generated', [
+            'reply' => $response['text'],
+            'products' => extractProductSuggestions($response['text'], $products)
+        ]);
     } else {
         // Fallback response if API fails
         $fallback = generateFallbackResponse($message, $products);
-        jsonResponse(true, 'Response generated', ['reply' => $fallback, 'fallback' => true]);
+        jsonResponse(true, 'Response generated', [
+            'reply' => $fallback,
+            'products' => extractProductSuggestions($fallback, $products),
+            'fallback' => true
+        ]);
     }
 }
 
@@ -166,7 +173,10 @@ Format your response in a friendly, helpful way. Include product names and price
     $response = callGeminiAPI($messages);
     
     if ($response['success']) {
-        jsonResponse(true, 'Recommendations generated', ['reply' => $response['text']]);
+        jsonResponse(true, 'Recommendations generated', [
+            'reply' => $response['text'],
+            'products' => extractProductSuggestions($response['text'], $products)
+        ]);
     } else {
         // Fallback: recommend based on price range
         $recommendations = [];
@@ -185,7 +195,11 @@ Format your response in a friendly, helpful way. Include product names and price
         }
         $fallbackText .= "\nWould you like more specific recommendations?";
         
-        jsonResponse(true, 'Recommendations generated', ['reply' => $fallbackText, 'fallback' => true]);
+        jsonResponse(true, 'Recommendations generated', [
+            'reply' => $fallbackText,
+            'products' => extractProductSuggestions($fallbackText, $products),
+            'fallback' => true
+        ]);
     }
 }
 
@@ -403,6 +417,38 @@ function buildProductCatalog($products, $categories) {
         $catalog .= "- {$product['name']} | Category: {$product['category_name']} | Price: Rs. " . number_format($price, 2) . " | {$stock}\n";
     }
     return $catalog;
+}
+
+/**
+ * Convert products mentioned in an AI reply into safe, structured navigation
+ * data for the chat widget. The browser never needs to infer product URLs.
+ */
+function extractProductSuggestions(string $reply, array $products, int $limit = 5): array {
+    $suggestions = [];
+
+    foreach ($products as $product) {
+        if (stripos($reply, $product['name']) === false) {
+            continue;
+        }
+
+        $price = (float) ($product['sale_price'] ?: $product['price']);
+        $suggestions[] = [
+            'id' => (int) $product['id'],
+            'name' => $product['name'],
+            'category' => $product['category_name'] ?? '',
+            'price' => $price,
+            'original_price' => (float) $product['price'],
+            'on_sale' => !empty($product['sale_price']) && (float) $product['sale_price'] < (float) $product['price'],
+            'image' => $product['image'] ?? null,
+            'url' => rtrim(APP_URL, '/') . '/pages/product.php?id=' . (int) $product['id']
+        ];
+
+        if (count($suggestions) >= $limit) {
+            break;
+        }
+    }
+
+    return $suggestions;
 }
 
 /**

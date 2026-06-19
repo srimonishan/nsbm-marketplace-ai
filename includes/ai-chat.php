@@ -223,6 +223,49 @@
     margin-bottom: 0.5rem;
 }
 
+.ai-product-suggestions {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 0.75rem;
+}
+
+.ai-product-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.7rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    background: rgba(108, 99, 255, 0.1);
+    border: 1px solid rgba(108, 99, 255, 0.3);
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+
+.ai-product-link:hover {
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.ai-product-info {
+    min-width: 0;
+}
+
+.ai-product-name {
+    display: block;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ai-product-price {
+    color: var(--secondary);
+    font-size: 0.75rem;
+}
+
 .ai-message-user .ai-message-content {
     background: rgba(108, 99, 255, 0.15);
     border-color: rgba(108, 99, 255, 0.3);
@@ -361,7 +404,7 @@ async function sendAIMessage(e) {
         }
         
         if (result.success && result.data && result.data.reply) {
-            addChatMessage(result.data.reply, 'bot');
+            addChatMessage(result.data.reply, 'bot', result.data.products || []);
             chatContext.push({ role: 'assistant', content: result.data.reply });
         } else {
             addChatMessage(result.message || "I'm sorry, I couldn't process that request. Please try again or rephrase your question.", 'bot');
@@ -373,22 +416,44 @@ async function sendAIMessage(e) {
     }
 }
 
-function addChatMessage(content, role) {
+function escapeChatHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function addChatMessage(content, role, products = []) {
     const messagesDiv = document.getElementById('aiChatMessages');
     const messageEl = document.createElement('div');
     messageEl.className = `ai-message ai-message-${role}`;
     
     // Convert markdown-like formatting
-    let formattedContent = content
+    let formattedContent = escapeChatHtml(content)
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/\n/g, '<br>')
         .replace(/• /g, '&bull; ');
     
     const icon = role === 'bot' ? 'bi-robot' : 'bi-person';
+    const productLinks = products.length ? `
+        <div class="ai-product-suggestions">
+            ${products.map(product => `
+                <a class="ai-product-link" href="${escapeChatHtml(product.url)}">
+                    <span class="ai-product-info">
+                        <span class="ai-product-name">${escapeChatHtml(product.name)}</span>
+                        <span class="ai-product-price">${formatPrice(product.price)}</span>
+                    </span>
+                    <span class="btn btn-primary-custom btn-sm">View Product</span>
+                </a>
+            `).join('')}
+        </div>
+    ` : '';
     messageEl.innerHTML = `
         <div class="ai-message-avatar"><i class="bi ${icon}"></i></div>
-        <div class="ai-message-content">${formattedContent}</div>
+        <div class="ai-message-content">${formattedContent}${productLinks}</div>
     `;
     
     messagesDiv.appendChild(messageEl);

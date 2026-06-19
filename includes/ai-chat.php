@@ -9,23 +9,23 @@
     <!-- Chat Window -->
     <div class="ai-chat-window" id="aiChatWindow">
         <div class="ai-chat-header">
-            <div class="d-flex align-items-center gap-2">
+            <div class="ai-chat-identity">
                 <div class="ai-chat-avatar">
                     <i class="bi bi-robot"></i>
                 </div>
-                <div>
-                    <h6 class="mb-0">AI Assistant</h6>
-                    <small class="text-muted-custom">Powered by Gemini</small>
+                <div class="ai-chat-title-wrap">
+                    <h6>AI Shopping Assistant</h6>
+                    <small><span class="ai-status-dot"></span>Online · Powered by Gemini</small>
                 </div>
             </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-glass btn-sm" onclick="switchAIMode('shop')" id="modeShop" title="Shopping Assistant">
+            <div class="ai-chat-actions">
+                <button class="ai-header-action active" onclick="switchAIMode('shop')" id="modeShop" title="Shopping Assistant" aria-label="Shopping Assistant">
                     <i class="bi bi-bag"></i>
                 </button>
-                <button class="btn btn-glass btn-sm" onclick="switchAIMode('gift')" id="modeGift" title="Gift Recommender">
+                <button class="ai-header-action" onclick="switchAIMode('gift')" id="modeGift" title="Gift Recommender" aria-label="Gift Recommender">
                     <i class="bi bi-gift"></i>
                 </button>
-                <button class="btn btn-glass btn-sm" onclick="toggleAIChat()">
+                <button class="ai-header-action" onclick="toggleAIChat()" title="Close assistant" aria-label="Close assistant">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -115,18 +115,18 @@
     position: absolute;
     bottom: 80px;
     right: 0;
-    width: 380px;
-    max-width: calc(100vw - 40px);
-    height: 520px;
-    max-height: calc(100vh - 120px);
-    background: rgba(10, 10, 26, 0.98);
+    width: 440px;
+    max-width: calc(100vw - 32px);
+    height: 640px;
+    max-height: calc(100vh - 110px);
+    background: rgba(9, 10, 28, 0.98);
     backdrop-filter: blur(30px);
-    border: 1px solid var(--border-glass);
+    border: 1px solid rgba(145, 139, 255, 0.3);
     border-radius: var(--radius-lg);
     display: none;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.58), 0 0 0 1px rgba(255, 255, 255, 0.025) inset;
     animation: slideUp 0.3s ease;
 }
 
@@ -140,17 +140,27 @@
 }
 
 .ai-chat-header {
-    padding: 1rem;
-    border-bottom: 1px solid var(--border-glass);
+    min-height: 78px;
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid rgba(145, 139, 255, 0.22);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(20, 20, 40, 0.9);
+    background: linear-gradient(135deg, rgba(25, 24, 52, 0.98), rgba(15, 15, 34, 0.98));
+    gap: 0.75rem;
+}
+
+.ai-chat-identity {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-width: 0;
 }
 
 .ai-chat-avatar {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
     background: var(--gradient-primary);
     border-radius: 50%;
     display: flex;
@@ -160,19 +170,90 @@
     font-size: 1rem;
 }
 
+.ai-chat-title-wrap {
+    min-width: 0;
+}
+
+.ai-chat-title-wrap h6 {
+    margin: 0 0 0.2rem;
+    color: var(--text-primary);
+    font-size: 0.94rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.ai-chat-title-wrap small {
+    display: flex;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    white-space: nowrap;
+}
+
+.ai-status-dot {
+    width: 7px;
+    height: 7px;
+    margin-right: 0.35rem;
+    background: var(--secondary);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0, 212, 170, 0.8);
+}
+
+.ai-chat-actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 0.45rem;
+}
+
+.ai-header-action {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    transition: var(--transition);
+}
+
+.ai-header-action:hover,
+.ai-header-action.active {
+    color: white;
+    background: rgba(108, 99, 255, 0.2);
+    border-color: rgba(132, 124, 255, 0.65);
+}
+
 .ai-chat-messages {
     flex: 1;
     overflow-y: auto;
-    padding: 1rem;
+    overflow-x: hidden;
+    min-height: 0;
+    padding: 1.15rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.1rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(108, 99, 255, 0.7) transparent;
+}
+
+.ai-chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ai-chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(108, 99, 255, 0.7);
+    border-radius: 10px;
 }
 
 .ai-message {
     display: flex;
-    gap: 0.5rem;
-    max-width: 90%;
+    align-items: flex-start;
+    gap: 0.65rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
 }
 
 .ai-message-bot {
@@ -182,6 +263,8 @@
 .ai-message-user {
     align-self: flex-end;
     flex-direction: row-reverse;
+    width: auto;
+    max-width: 84%;
 }
 
 .ai-message-avatar {
@@ -206,12 +289,17 @@
 }
 
 .ai-message-content {
-    background: var(--bg-glass);
-    border: 1px solid var(--border-glass);
-    border-radius: var(--radius-md);
-    padding: 0.75rem 1rem;
-    font-size: 0.85rem;
-    line-height: 1.5;
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    background: linear-gradient(145deg, rgba(27, 27, 55, 0.94), rgba(18, 19, 42, 0.94));
+    border: 1px solid rgba(145, 139, 255, 0.24);
+    border-radius: 4px 16px 16px 16px;
+    padding: 0.95rem 1rem;
+    color: var(--text-secondary);
+    font-size: 0.86rem;
+    line-height: 1.65;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
 }
 
 .ai-message-content p:last-child {
@@ -225,21 +313,26 @@
 
 .ai-product-suggestions {
     display: grid;
-    gap: 0.6rem;
-    margin-top: 0.75rem;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .ai-product-link {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.75rem;
-    padding: 0.7rem;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    gap: 0.8rem;
+    padding: 0.8rem 0.85rem;
     color: var(--text-primary);
     text-decoration: none;
-    background: rgba(108, 99, 255, 0.1);
-    border: 1px solid rgba(108, 99, 255, 0.3);
-    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, rgba(108, 99, 255, 0.14), rgba(0, 212, 170, 0.05));
+    border: 1px solid rgba(125, 116, 255, 0.42);
+    border-radius: 12px;
     transition: var(--transition);
 }
 
@@ -250,6 +343,7 @@
 }
 
 .ai-product-info {
+    flex: 1;
     min-width: 0;
 }
 
@@ -262,36 +356,76 @@
 }
 
 .ai-product-price {
+    display: block;
+    margin-top: 0.15rem;
     color: var(--secondary);
     font-size: 0.75rem;
 }
 
+.ai-product-action {
+    flex-shrink: 0;
+    padding: 0.48rem 0.7rem;
+    color: white;
+    background: var(--gradient-primary);
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
 .ai-message-user .ai-message-content {
-    background: rgba(108, 99, 255, 0.15);
-    border-color: rgba(108, 99, 255, 0.3);
+    flex: initial;
+    background: linear-gradient(135deg, rgba(108, 99, 255, 0.3), rgba(74, 64, 180, 0.26));
+    border-color: rgba(134, 126, 255, 0.55);
+    border-radius: 16px 4px 16px 16px;
+    color: var(--text-primary);
 }
 
 .ai-chat-quick {
-    padding: 0.5rem 1rem;
-    display: flex;
+    padding: 0.8rem 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.5rem;
-    overflow-x: auto;
-    border-top: 1px solid var(--border-glass);
+    overflow: hidden;
+    border-top: 1px solid rgba(145, 139, 255, 0.18);
+    background: rgba(12, 13, 32, 0.96);
 }
 
 .ai-chat-quick .btn {
+    width: 100%;
+    min-width: 0;
+    padding: 0.48rem 0.35rem;
     white-space: nowrap;
-    font-size: 0.7rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.68rem;
 }
 
 .ai-chat-input {
-    padding: 1rem;
-    border-top: 1px solid var(--border-glass);
-    background: rgba(20, 20, 40, 0.9);
+    padding: 0.9rem 1rem 1rem;
+    border-top: 1px solid rgba(145, 139, 255, 0.18);
+    background: rgba(18, 18, 40, 0.98);
+}
+
+.ai-chat-input form {
+    min-width: 0;
 }
 
 .ai-chat-input .form-control {
-    font-size: 0.85rem;
+    min-width: 0;
+    height: 44px;
+    padding-inline: 1rem;
+    border-radius: 999px;
+    font-size: 0.84rem;
+}
+
+.ai-chat-input #aiSendBtn {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    display: grid;
+    place-items: center;
+    padding: 0;
 }
 
 .ai-typing {
@@ -318,10 +452,40 @@
 
 @media (max-width: 576px) {
     .ai-chat-window {
-        width: calc(100vw - 20px);
-        right: -10px;
-        height: calc(100vh - 100px);
+        width: calc(100vw - 24px);
+        right: -8px;
+        height: min(640px, calc(100vh - 96px));
         bottom: 70px;
+    }
+
+    .ai-chat-header {
+        min-height: 72px;
+        padding: 0.85rem;
+    }
+
+    .ai-header-action {
+        width: 34px;
+        height: 34px;
+    }
+
+    .ai-chat-messages {
+        padding: 0.85rem;
+    }
+
+    .ai-message-avatar {
+        display: none;
+    }
+
+    .ai-message-user {
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 390px) {
+    .ai-chat-title-wrap small {
+        max-width: 125px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 </style>
@@ -446,7 +610,7 @@ function addChatMessage(content, role, products = []) {
                         <span class="ai-product-name">${escapeChatHtml(product.name)}</span>
                         <span class="ai-product-price">${formatPrice(product.price)}</span>
                     </span>
-                    <span class="btn btn-primary-custom btn-sm">View Product</span>
+                    <span class="ai-product-action">View Product</span>
                 </a>
             `).join('')}
         </div>

@@ -319,24 +319,55 @@ function callGeminiAPI($messages) {
 
     $lastError = 'Gemini request failed';
     foreach ($apiKeys as $index => $apiKey) {
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => [
-                'Content-Type: application/json',
-                'x-goog-api-key: ' . $apiKey
-            ],
-            CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_CONNECTTIMEOUT => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_SSL_VERIFYPEER => true
-        ]);
+        $requestBody = json_encode($payload);
+        $response = false;
+        $httpCode = 0;
+        $error = '';
 
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        curl_close($ch);
+        if (function_exists('curl_init')) {
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_HTTPHEADER => [
+                    'Content-Type: application/json',
+                    'x-goog-api-key: ' . $apiKey
+                ],
+                CURLOPT_POSTFIELDS => $requestBody,
+                CURLOPT_CONNECTTIMEOUT => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_SSL_VERIFYPEER => true
+            ]);
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error = curl_error($ch);
+            curl_close($ch);
+        } else {
+            $context = stream_context_create([
+                'http' => [
+                    'method' => 'POST',
+                    'header' => "Content-Type: application/json\r\nx-goog-api-key: {$apiKey}\r\n",
+                    'content' => $requestBody,
+                    'timeout' => 30,
+                    'ignore_errors' => true
+                ],
+                'ssl' => [
+                    'verify_peer' => true,
+                    'verify_peer_name' => true
+                ]
+            ]);
+            $response = @file_get_contents($url, false, $context);
+            foreach ($http_response_header ?? [] as $header) {
+                if (preg_match('/^HTTP\/\S+\s+(\d{3})/', $header, $matches)) {
+                    $httpCode = (int) $matches[1];
+                }
+            }
+            if ($response === false) {
+                $lastPhpError = error_get_last();
+                $error = $lastPhpError['message'] ?? 'HTTPS request failed';
+            }
+        }
 
         if ($error) {
             error_log('Gemini API transport error: ' . $error);

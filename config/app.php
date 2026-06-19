@@ -21,6 +21,19 @@ define('APP_VERSION', '1.0.0');
 define('APP_URL', getenv('APP_URL') ?: 'http://localhost:8000');
 define('APP_ROOT', dirname(__DIR__));
 
+// Load local development secrets without requiring a third-party dotenv package.
+// Production deployments should provide these values through the web server.
+$localEnvFile = APP_ROOT . '/.env';
+if (is_file($localEnvFile) && is_readable($localEnvFile)) {
+    $localEnv = parse_ini_file($localEnvFile, false, INI_SCANNER_RAW) ?: [];
+    foreach ($localEnv as $key => $value) {
+        if (getenv($key) === false) {
+            putenv("{$key}={$value}");
+            $_ENV[$key] = $value;
+        }
+    }
+}
+
 // Paths
 define('UPLOAD_PATH', APP_ROOT . '/uploads/');
 define('UPLOAD_URL', APP_URL . '/uploads/');
@@ -36,7 +49,12 @@ define('ITEMS_PER_PAGE', 12);
 define('ADMIN_ITEMS_PER_PAGE', 20);
 
 // AI Configuration
-define('GEMINI_API_KEY', getenv('GEMINI_API_KEY') ?: 'your-gemini-api-key-here');
+$geminiApiKeys = array_values(array_filter(array_map(
+    'trim',
+    explode(',', getenv('GEMINI_API_KEYS') ?: (getenv('GEMINI_API_KEY') ?: ''))
+)));
+define('GEMINI_API_KEYS', $geminiApiKeys);
+define('GEMINI_API_KEY', $geminiApiKeys[0] ?? 'your-gemini-api-key-here');
 define('GEMINI_MODEL', getenv('GEMINI_MODEL') ?: 'gemini-3.5-flash');
 define('GEMINI_API_URL', getenv('GEMINI_API_URL') ?: 'https://generativelanguage.googleapis.com/v1beta/models');
 

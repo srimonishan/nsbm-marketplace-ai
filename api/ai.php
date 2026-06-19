@@ -292,9 +292,9 @@ function handleTest() {
  * Call Gemini API
  */
 function callGeminiAPI($messages) {
-    $apiKey = GEMINI_API_KEY;
+    $apiKeys = GEMINI_API_KEYS;
     
-    if (empty($apiKey) || $apiKey === 'your-gemini-api-key-here') {
+    if (empty($apiKeys)) {
         return ['success' => false, 'error' => 'API key not configured'];
     }
 
@@ -317,43 +317,48 @@ function callGeminiAPI($messages) {
         ]
     ];
 
-    $ch = curl_init($url);
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_HTTPHEADER => [
-            'Content-Type: application/json',
-            'x-goog-api-key: ' . $apiKey
-        ],
-        CURLOPT_POSTFIELDS => json_encode($payload),
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_SSL_VERIFYPEER => true
-    ]);
+    $lastError = 'Gemini request failed';
+    foreach ($apiKeys as $index => $apiKey) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'x-goog-api-key: ' . $apiKey
+            ],
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYPEER => true
+        ]);
 
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $error = curl_error($ch);
-    curl_close($ch);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
 
-    if ($error) {
-        error_log('Gemini API transport error: ' . $error);
-        return ['success' => false, 'error' => 'cURL error: ' . $error];
+        if ($error) {
+            error_log('Gemini API transport error: ' . $error);
+            return ['success' => false, 'error' => 'cURL error: ' . $error];
+        }
+
+        $data = json_decode($response, true);
+        if ($httpCode === 200 && isset($data['candidates'][0]['content']['parts'][0]['text'])) {
+            return ['success' => true, 'text' => $data['candidates'][0]['content']['parts'][0]['text']];
+        }
+
+        $lastError = $data['error']['message'] ?? 'HTTP ' . $httpCode;
+        error_log('Gemini API key ' . ($index + 1) . " returned HTTP {$httpCode}: {$lastError}");
+
+        // A different credential can recover from invalid-key, permission, or
+        // per-key quota errors. Other failures are request/model errors.
+        if (!in_array($httpCode, [401, 403, 429], true)) {
+            break;
+        }
     }
 
-    if ($httpCode !== 200) {
-        $errorData = json_decode($response, true);
-        $errorMsg = $errorData['error']['message'] ?? 'HTTP ' . $httpCode;
-        error_log("Gemini API HTTP {$httpCode}: {$errorMsg}");
-        return ['success' => false, 'error' => $errorMsg];
-    }
-
-    $data = json_decode($response, true);
-    
-    if (isset($data['candidates'][0]['content']['parts'][0]['text'])) {
-        return ['success' => true, 'text' => $data['candidates'][0]['content']['parts'][0]['text']];
-    }
-
-    return ['success' => false, 'error' => 'No response generated'];
+    return ['success' => false, 'error' => $lastError];
 }
 
 /**

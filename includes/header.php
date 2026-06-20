@@ -145,12 +145,14 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                                     <label class="form-label-custom">Password</label>
                                     <input type="password" name="password" class="form-control form-control-custom" placeholder="Enter password" required>
                                 </div>
-                                <div class="mb-3 text-muted-custom small">
-                                    Demo: admin@nsbm.ac.lk / password
-                                </div>
                                 <button type="submit" class="btn btn-primary-custom w-100">
                                     <i class="bi bi-box-arrow-in-right me-2"></i>Login
                                 </button>
+                                <div class="text-center mt-3">
+                                    <a href="<?= rtrim(APP_URL, '/') ?>/admin/login.php" class="text-decoration-none">
+                                        <i class="bi bi-shield-lock me-1"></i>Admin Login
+                                    </a>
+                                </div>
                             </form>
                         </div>
                         <!-- Register Tab -->

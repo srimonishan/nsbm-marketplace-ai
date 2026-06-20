@@ -1,6 +1,6 @@
 <?php
 /**
- * Cart API - NSBM Marketplace AI
+ * Cart API - GreenLink Market
  * Cart is managed client-side via localStorage, this validates items
  */
 

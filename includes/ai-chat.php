@@ -35,7 +35,7 @@
             <div class="ai-message ai-message-bot">
                 <div class="ai-message-avatar"><i class="bi bi-robot"></i></div>
                 <div class="ai-message-content">
-                    <p>Hello! I'm your AI Shopping Assistant for NSBM Marketplace. I can help you:</p>
+                    <p>Hello! I'm your AI Shopping Assistant for GreenLink Market. I can help you:</p>
                     <ul>
                         <li>Find products you need</li>
                         <li>Get personalized recommendations</li>
@@ -84,14 +84,14 @@
     color: white;
     font-size: 1.5rem;
     cursor: pointer;
-    box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4);
+    box-shadow: 0 4px 20px rgba(8, 122, 75, 0.4);
     transition: var(--transition);
     position: relative;
 }
 
 .ai-chat-toggle:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 30px rgba(108, 99, 255, 0.6);
+    box-shadow: 0 6px 30px rgba(8, 122, 75, 0.6);
 }
 
 .ai-chat-pulse {
@@ -119,9 +119,9 @@
     max-width: calc(100vw - 32px);
     height: 640px;
     max-height: calc(100vh - 110px);
-    background: rgba(9, 10, 28, 0.98);
+    background: rgba(5, 18, 12, 0.98);
     backdrop-filter: blur(30px);
-    border: 1px solid rgba(145, 139, 255, 0.3);
+    border: 1px solid rgba(129, 217, 163, 0.28);
     border-radius: var(--radius-lg);
     display: none;
     flex-direction: column;
@@ -142,11 +142,11 @@
 .ai-chat-header {
     min-height: 78px;
     padding: 1rem 1.1rem;
-    border-bottom: 1px solid rgba(145, 139, 255, 0.22);
+    border-bottom: 1px solid rgba(129, 217, 163, 0.22);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(135deg, rgba(25, 24, 52, 0.98), rgba(15, 15, 34, 0.98));
+    background: linear-gradient(135deg, rgba(16, 45, 30, 0.98), rgba(7, 25, 17, 0.98));
     gap: 0.75rem;
 }
 
@@ -196,7 +196,7 @@
     margin-right: 0.35rem;
     background: var(--secondary);
     border-radius: 50%;
-    box-shadow: 0 0 8px rgba(0, 212, 170, 0.8);
+    box-shadow: 0 0 8px rgba(182, 227, 74, 0.8);
 }
 
 .ai-chat-actions {
@@ -221,8 +221,8 @@
 .ai-header-action:hover,
 .ai-header-action.active {
     color: white;
-    background: rgba(108, 99, 255, 0.2);
-    border-color: rgba(132, 124, 255, 0.65);
+    background: rgba(8, 122, 75, 0.2);
+    border-color: rgba(129, 217, 163, 0.6);
 }
 
 .ai-chat-messages {
@@ -235,7 +235,7 @@
     flex-direction: column;
     gap: 1.1rem;
     scrollbar-width: thin;
-    scrollbar-color: rgba(108, 99, 255, 0.7) transparent;
+    scrollbar-color: rgba(8, 122, 75, 0.7) transparent;
 }
 
 .ai-chat-messages::-webkit-scrollbar {
@@ -243,7 +243,7 @@
 }
 
 .ai-chat-messages::-webkit-scrollbar-thumb {
-    background: rgba(108, 99, 255, 0.7);
+    background: rgba(8, 122, 75, 0.7);
     border-radius: 10px;
 }
 
@@ -292,8 +292,8 @@
     flex: 1;
     min-width: 0;
     overflow-wrap: anywhere;
-    background: linear-gradient(145deg, rgba(27, 27, 55, 0.94), rgba(18, 19, 42, 0.94));
-    border: 1px solid rgba(145, 139, 255, 0.24);
+    background: linear-gradient(145deg, rgba(18, 49, 33, 0.94), rgba(9, 29, 19, 0.96));
+    border: 1px solid rgba(129, 217, 163, 0.22);
     border-radius: 4px 16px 16px 16px;
     padding: 0.95rem 1rem;
     color: var(--text-secondary);
@@ -330,8 +330,8 @@
     padding: 0.8rem 0.85rem;
     color: var(--text-primary);
     text-decoration: none;
-    background: linear-gradient(135deg, rgba(108, 99, 255, 0.14), rgba(0, 212, 170, 0.05));
-    border: 1px solid rgba(125, 116, 255, 0.42);
+    background: linear-gradient(135deg, rgba(8, 122, 75, 0.14), rgba(182, 227, 74, 0.05));
+    border: 1px solid rgba(75, 191, 123, 0.42);
     border-radius: 12px;
     transition: var(--transition);
 }
@@ -375,8 +375,8 @@
 
 .ai-message-user .ai-message-content {
     flex: initial;
-    background: linear-gradient(135deg, rgba(108, 99, 255, 0.3), rgba(74, 64, 180, 0.26));
-    border-color: rgba(134, 126, 255, 0.55);
+    background: linear-gradient(135deg, rgba(8, 122, 75, 0.3), rgba(6, 91, 57, 0.26));
+    border-color: rgba(75, 191, 123, 0.58);
     border-radius: 16px 4px 16px 16px;
     color: var(--text-primary);
 }
@@ -387,8 +387,8 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.5rem;
     overflow: hidden;
-    border-top: 1px solid rgba(145, 139, 255, 0.18);
-    background: rgba(12, 13, 32, 0.96);
+    border-top: 1px solid rgba(129, 217, 163, 0.18);
+    background: rgba(6, 22, 14, 0.96);
 }
 
 .ai-chat-quick .btn {
@@ -403,8 +403,8 @@
 
 .ai-chat-input {
     padding: 0.9rem 1rem 1rem;
-    border-top: 1px solid rgba(145, 139, 255, 0.18);
-    background: rgba(18, 18, 40, 0.98);
+    border-top: 1px solid rgba(129, 217, 163, 0.18);
+    background: rgba(9, 29, 19, 0.98);
 }
 
 .ai-chat-input form {

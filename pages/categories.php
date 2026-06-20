@@ -1,6 +1,6 @@
 <?php
 /**
- * Categories Page - NSBM Marketplace AI
+ * Categories Page - GreenLink Market
  */
 $isSubPage = true;
 $pageTitle = 'Categories';
@@ -28,23 +28,13 @@ include __DIR__ . '/../includes/header.php';
     <div class="container">
         <div class="row g-4">
             <?php 
-            $icons = ['bi-laptop', 'bi-book', 'bi-bag-heart', 'bi-cup-hot', 'bi-bicycle', 'bi-palette', 'bi-tools', 'bi-house-heart'];
-            $colors = [
-                'linear-gradient(135deg, #6c63ff, #8b83ff)',
-                'linear-gradient(135deg, #00d4aa, #33e0be)',
-                'linear-gradient(135deg, #ff6b9d, #ff8fb5)',
-                'linear-gradient(135deg, #ffc107, #ffcd38)',
-                'linear-gradient(135deg, #17a2b8, #3dc5d8)',
-                'linear-gradient(135deg, #e83e8c, #f06eaa)',
-                'linear-gradient(135deg, #6610f2, #8540f5)',
-                'linear-gradient(135deg, #20c997, #4dd4ac)'
-            ];
+            $icons = ['bi-laptop', 'bi-journal-bookmark', 'bi-bag', 'bi-cup-hot', 'bi-trophy', 'bi-palette', 'bi-briefcase', 'bi-house-door'];
             foreach ($categories as $i => $category): 
             ?>
             <div class="col-lg-3 col-md-4 col-sm-6" data-animate>
                 <a href="products.php?category=<?= $category['id'] ?>" class="text-decoration-none">
-                    <div class="glass-card text-center h-100" style="padding:2.5rem 1.5rem;">
-                        <div class="category-icon mx-auto mb-3" style="background:<?= $colors[$i % count($colors)] ?>;width:70px;height:70px;font-size:1.8rem;">
+                    <div class="category-card category-card-detail h-100">
+                        <div class="category-icon">
                             <i class="bi <?= $icons[$i % count($icons)] ?>"></i>
                         </div>
                         <h4 class="mb-2"><?= sanitize($category['name']) ?></h4>

@@ -1,10 +1,10 @@
-# NSBM Marketplace AI
+# GreenLink Market
 
 > A premium AI-powered e-commerce marketplace built exclusively for NSBM Green University students and staff.
 
 ## Overview
 
-NSBM Marketplace AI is a full-stack web application featuring:
+GreenLink Market is a full-stack web application featuring:
 - **Customer Panel** - Browse, search, filter, cart, checkout, and purchase simulation
 - **Admin Panel** - Dashboard, CRUD operations, order management, analytics
 - **AI Integration** - Gemini-powered shopping assistant, gift recommender, and dynamic content generator

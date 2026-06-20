@@ -1,6 +1,6 @@
 <?php
 /**
- * Products Page - NSBM Marketplace AI
+ * Products Page - GreenLink Market
  */
 $isSubPage = true;
 $pageTitle = 'Products';
@@ -139,13 +139,16 @@ include __DIR__ . '/../includes/header.php';
                             $price = $product['sale_price'] ?: $product['price'];
                             $hasDiscount = $product['sale_price'] && $product['sale_price'] < $product['price'];
                             $discount = $hasDiscount ? round((1 - $product['sale_price'] / $product['price']) * 100) : 0;
+                            $productImage = productImageUrl($product['image'] ?? null);
                         ?>
                         <div class="col-md-4 col-sm-6" data-animate>
                             <div class="product-card">
                                 <div class="product-card-image">
-                                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, rgba(108,99,255,0.1), rgba(0,212,170,0.05));">
-                                        <i class="bi bi-box-seam" style="font-size:3rem;color:var(--primary-light);opacity:0.5;"></i>
-                                    </div>
+                                    <?php if ($productImage): ?>
+                                        <img src="<?= sanitize($productImage) ?>" alt="<?= sanitize($product['name']) ?>" loading="lazy">
+                                    <?php else: ?>
+                                        <div class="product-image-placeholder"><i class="bi bi-box-seam"></i></div>
+                                    <?php endif; ?>
                                     <?php if ($hasDiscount): ?>
                                         <span class="product-badge product-badge-sale">-<?= $discount ?>%</span>
                                     <?php endif; ?>
@@ -171,7 +174,7 @@ include __DIR__ . '/../includes/header.php';
                                 </div>
                                 <div class="product-card-actions">
                                     <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-outline-custom btn-sm">View</a>
-                                    <button class="btn btn-primary-custom btn-sm" onclick='Cart.add(<?= json_encode(["id" => $product["id"], "name" => $product["name"], "price" => (float)$price, "sale_price" => $product["sale_price"], "image" => $product["image"], "stock_quantity" => $product["stock_quantity"]]) ?>)'>
+                                    <button class="btn btn-primary-custom btn-sm" onclick='Cart.add(<?= json_encode(["id" => $product["id"], "name" => $product["name"], "price" => (float)$price, "sale_price" => $product["sale_price"], "image" => $productImage, "stock_quantity" => $product["stock_quantity"]]) ?>)'>
                                         <i class="bi bi-cart-plus"></i> Add
                                     </button>
                                 </div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * NSBM Marketplace AI - Database Configuration
+ * GreenLink Market - Database Configuration
  * Uses PDO with prepared statements for security
  */
 

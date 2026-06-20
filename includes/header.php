@@ -9,8 +9,8 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NSBM Marketplace AI - Premium AI-Powered Shopping for NSBM Green University Students">
-    <title><?= isset($pageTitle) ? sanitize($pageTitle) . ' | ' : '' ?>NSBM Marketplace AI</title>
+    <meta name="description" content="GreenLink Market - Premium AI-Powered Shopping for NSBM Green University Students">
+    <title><?= isset($pageTitle) ? sanitize($pageTitle) . ' | ' : '' ?>GreenLink Market</title>
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -27,7 +27,7 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="<?= isset($isSubPage) ? '../' : '' ?>index.php">
                 <span class="brand-icon"><i class="bi bi-shop"></i></span>
-                NSBM Marketplace
+                GreenLink Market
             </a>
             
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">

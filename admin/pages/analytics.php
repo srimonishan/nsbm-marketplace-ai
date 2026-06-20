@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Analytics - NSBM Marketplace AI
+ * Admin Analytics - GreenLink Market
  */
 session_start();
 require_once __DIR__ . '/../../config/app.php';
@@ -30,7 +30,7 @@ include __DIR__ . '/../includes/header.php';
 <div class="row g-4 mb-4">
     <div class="col-md-3">
         <div class="stat-card">
-            <div class="stat-card-icon" style="background:rgba(108,99,255,0.15);color:var(--primary);">
+            <div class="stat-card-icon" style="background:rgba(8, 122, 75,0.15);color:var(--primary);">
                 <i class="bi bi-cash-stack"></i>
             </div>
             <div class="stat-card-value text-gradient"><?= formatPrice($totalRevenue) ?></div>
@@ -39,7 +39,7 @@ include __DIR__ . '/../includes/header.php';
     </div>
     <div class="col-md-3">
         <div class="stat-card">
-            <div class="stat-card-icon" style="background:rgba(0,212,170,0.15);color:var(--secondary);">
+            <div class="stat-card-icon" style="background:rgba(182, 227, 74,0.15);color:var(--secondary);">
                 <i class="bi bi-bag"></i>
             </div>
             <div class="stat-card-value"><?= $totalOrders ?></div>
@@ -116,8 +116,8 @@ new Chart(document.getElementById('monthlyRevenueChart').getContext('2d'), {
         datasets: [{
             label: 'Revenue (Rs.)',
             data: [120000, 180000, 150000, 220000, 280000, 250000, 310000, 290000, 340000, 380000, 420000, 332422],
-            backgroundColor: 'rgba(108, 99, 255, 0.6)',
-            borderColor: '#6c63ff',
+            backgroundColor: 'rgba(8, 122, 75, 0.6)',
+            borderColor: '#087a4b',
             borderWidth: 2,
             borderRadius: 8
         }]
@@ -140,7 +140,7 @@ new Chart(document.getElementById('categoryChart').getContext('2d'), {
         labels: ['Electronics', 'Books', 'Fashion', 'Food', 'Sports', 'Art', 'Services', 'Dorm'],
         datasets: [{
             data: [35, 15, 20, 10, 5, 5, 5, 5],
-            backgroundColor: ['#6c63ff', '#00d4aa', '#ff6b9d', '#ffc107', '#17a2b8', '#e83e8c', '#6610f2', '#20c997'],
+            backgroundColor: ['#087a4b', '#b6e34a', '#f2b84b', '#ffc107', '#17a2b8', '#e83e8c', '#6610f2', '#20c997'],
             borderWidth: 0
         }]
     },
@@ -160,8 +160,8 @@ new Chart(document.getElementById('ordersTrendChart').getContext('2d'), {
         datasets: [{
             label: 'Orders',
             data: [12, 19, 15, 25, 22, 30, 28, 35],
-            borderColor: '#00d4aa',
-            backgroundColor: 'rgba(0, 212, 170, 0.1)',
+            borderColor: '#b6e34a',
+            backgroundColor: 'rgba(182, 227, 74, 0.1)',
             borderWidth: 3,
             fill: true,
             tension: 0.4

@@ -1,6 +1,6 @@
 <?php
 /**
- * NSBM Marketplace AI - Homepage
+ * GreenLink Market - Homepage
  */
 $pageTitle = 'Home';
 require_once __DIR__ . '/config/init.php';
@@ -10,6 +10,9 @@ $categoryModel = new Category();
 
 $featuredProducts = $productModel->getFeatured(8);
 $categories = $categoryModel->getAll();
+$totalProducts = $productModel->getCount();
+$heroImageFile = __DIR__ . '/assets/images/greenlink-campus-hero.webp';
+$hasHeroImage = is_file($heroImageFile);
 
 include __DIR__ . '/includes/header.php';
 ?>
@@ -17,17 +20,17 @@ include __DIR__ . '/includes/header.php';
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
-        <div class="row align-items-center">
+        <div class="row align-items-center g-5">
             <div class="col-lg-6">
-                <div class="hero-content animate-fadeInUp">
+                <div class="hero-content hero-content-inner animate-fadeInUp">
                     <span class="badge-glass mb-3">
-                        <i class="bi bi-stars me-1"></i> AI-Powered Shopping Experience
+                        <i class="bi bi-stars me-1"></i> Built for NSBM campus life
                     </span>
                     <h1 class="hero-title" id="heroTitle">
-                        Discover <span class="gradient-text">Premium Products</span> for Campus Life
+                        Campus essentials, <span class="gradient-text">connected intelligently.</span>
                     </h1>
                     <p class="hero-subtitle" id="heroSubtitle">
-                        The exclusive AI-powered marketplace for NSBM Green University. Smart recommendations, seamless shopping, and premium quality.
+                        GreenLink Market brings trusted products, student-focused services, and AI-powered discovery into one seamless NSBM shopping experience.
                     </p>
                     <div class="d-flex gap-3 flex-wrap">
                         <a href="pages/products.php" class="btn btn-primary-custom btn-lg">
@@ -39,27 +42,47 @@ include __DIR__ . '/includes/header.php';
                     </div>
                     <div class="hero-stats">
                         <div class="hero-stat">
-                            <div class="hero-stat-number" data-count="500">0</div>
-                            <div class="hero-stat-label">Products</div>
+                            <div class="hero-stat-number" data-count="<?= $totalProducts ?>">0</div>
+                            <div class="hero-stat-label">Curated listings</div>
                         </div>
                         <div class="hero-stat">
-                            <div class="hero-stat-number" data-count="2000">0</div>
-                            <div class="hero-stat-label">Students</div>
+                            <div class="hero-stat-number" data-count="<?= count($categories) ?>">0</div>
+                            <div class="hero-stat-label">Categories</div>
                         </div>
                         <div class="hero-stat">
-                            <div class="hero-stat-number" data-count="98">0</div>
-                            <div class="hero-stat-label">% Satisfaction</div>
+                            <div class="hero-stat-number">24/7</div>
+                            <div class="hero-stat-label">AI assistance</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 d-none d-lg-block">
-                <div class="hero-visual text-center">
+            <div class="col-lg-6">
+                <div class="hero-visual">
                     <div class="hero-glow"></div>
-                    <div class="glass-card p-4" style="max-width:400px;margin:0 auto;position:relative;z-index:2;">
-                        <div style="font-size:4rem;margin-bottom:1rem;">🛍️</div>
-                        <h4 class="text-gradient mb-2">Smart Shopping</h4>
-                        <p class="text-muted-custom mb-0">AI-powered recommendations tailored for NSBM students</p>
+                    <div class="hero-floating-proof">
+                        <i class="bi bi-shield-check"></i>
+                        <div><strong>Campus focused</strong><small>Curated for NSBM students</small></div>
+                    </div>
+                    <div class="hero-media-frame">
+                        <?php if ($hasHeroImage): ?>
+                            <img src="assets/images/greenlink-campus-hero.webp" class="hero-campus-image" alt="NSBM Green University campus and student marketplace experience">
+                        <?php else: ?>
+                            <div class="hero-image-placeholder">
+                                <div class="hero-placeholder-mark">
+                                    <i class="bi bi-buildings"></i>
+                                    <strong>University hero image ready</strong>
+                                    <span class="d-block small mt-1">1600 × 1200 WebP recommended</span>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                        <div class="hero-image-shade"></div>
+                        <div class="hero-media-caption">
+                            <div>
+                                <h4>Smart shopping for campus life</h4>
+                                <p>Discover what you need, when you need it.</p>
+                            </div>
+                            <span class="hero-ai-chip"><i class="bi bi-stars me-1"></i>AI powered</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -76,7 +99,7 @@ include __DIR__ . '/includes/header.php';
         </div>
         <div class="row g-4">
             <?php 
-            $icons = ['bi-laptop', 'bi-book', 'bi-bag-heart', 'bi-cup-hot', 'bi-bicycle', 'bi-palette', 'bi-tools', 'bi-house-heart'];
+            $icons = ['bi-laptop', 'bi-journal-bookmark', 'bi-bag', 'bi-cup-hot', 'bi-trophy', 'bi-palette', 'bi-briefcase', 'bi-house-door'];
             foreach ($categories as $i => $category): 
             ?>
             <div class="col-lg-3 col-md-4 col-6" data-animate>
@@ -112,13 +135,16 @@ include __DIR__ . '/includes/header.php';
                 $price = $product['sale_price'] ?: $product['price'];
                 $hasDiscount = $product['sale_price'] && $product['sale_price'] < $product['price'];
                 $discount = $hasDiscount ? round((1 - $product['sale_price'] / $product['price']) * 100) : 0;
+                $productImage = productImageUrl($product['image'] ?? null);
             ?>
             <div class="col-lg-3 col-md-4 col-sm-6" data-animate>
                 <div class="product-card">
                     <div class="product-card-image">
-                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, rgba(108,99,255,0.1), rgba(0,212,170,0.05));">
-                            <i class="bi bi-box-seam" style="font-size:3rem;color:var(--primary-light);opacity:0.5;"></i>
-                        </div>
+                        <?php if ($productImage): ?>
+                            <img src="<?= sanitize($productImage) ?>" alt="<?= sanitize($product['name']) ?>" loading="lazy">
+                        <?php else: ?>
+                            <div class="product-image-placeholder"><i class="bi bi-box-seam"></i></div>
+                        <?php endif; ?>
                         <?php if ($hasDiscount): ?>
                             <span class="product-badge product-badge-sale">-<?= $discount ?>%</span>
                         <?php endif; ?>
@@ -144,7 +170,7 @@ include __DIR__ . '/includes/header.php';
                     </div>
                     <div class="product-card-actions">
                         <a href="pages/product.php?id=<?= $product['id'] ?>" class="btn btn-outline-custom btn-sm">View</a>
-                        <button class="btn btn-primary-custom btn-sm" onclick='Cart.add(<?= json_encode(["id" => $product["id"], "name" => $product["name"], "price" => (float)$price, "sale_price" => $product["sale_price"], "image" => $product["image"], "stock_quantity" => $product["stock_quantity"]]) ?>)'>
+                        <button class="btn btn-primary-custom btn-sm" onclick='Cart.add(<?= json_encode(["id" => $product["id"], "name" => $product["name"], "price" => (float)$price, "sale_price" => $product["sale_price"], "image" => $productImage, "stock_quantity" => $product["stock_quantity"]]) ?>)'>
                             <i class="bi bi-cart-plus"></i> Add
                         </button>
                     </div>
@@ -165,7 +191,7 @@ include __DIR__ . '/includes/header.php';
         <div class="row g-4">
             <div class="col-lg-4" data-animate>
                 <div class="glass-card text-center h-100">
-                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #6c63ff, #8b83ff);">
+                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #087a4b, #16a66a);">
                         <i class="bi bi-chat-dots"></i>
                     </div>
                     <h4 class="mb-2">Shopping Assistant</h4>
@@ -175,7 +201,7 @@ include __DIR__ . '/includes/header.php';
             </div>
             <div class="col-lg-4" data-animate>
                 <div class="glass-card text-center h-100">
-                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #00d4aa, #33e0be);">
+                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #b6e34a, #d0f27c);">
                         <i class="bi bi-gift"></i>
                     </div>
                     <h4 class="mb-2">Gift Recommender</h4>
@@ -185,7 +211,7 @@ include __DIR__ . '/includes/header.php';
             </div>
             <div class="col-lg-4" data-animate>
                 <div class="glass-card text-center h-100">
-                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #ff6b9d, #ff8fb5);">
+                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #f2b84b, #ffd477);">
                         <i class="bi bi-magic"></i>
                     </div>
                     <h4 class="mb-2">Dynamic Content</h4>

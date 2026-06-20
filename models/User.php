@@ -1,6 +1,6 @@
 <?php
 /**
- * User Model - NSBM Marketplace AI
+ * User Model - GreenLink Market
  */
 
 class User {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin AI Settings - NSBM Marketplace AI
+ * Admin AI Settings - GreenLink Market
  */
 session_start();
 require_once __DIR__ . '/../../config/app.php';
@@ -102,7 +102,7 @@ include __DIR__ . '/../includes/header.php';
             <div class="admin-card-body">
                 <div class="mb-3">
                     <label class="form-label-custom">Shopping Assistant Prompt</label>
-                    <textarea class="form-control form-control-custom" rows="3">You are a helpful shopping assistant for NSBM Marketplace. Help students find products, compare items, and make purchase decisions. Always recommend products from our available catalog.</textarea>
+                    <textarea class="form-control form-control-custom" rows="3">You are a helpful shopping assistant for GreenLink Market. Help students find products, compare items, and make purchase decisions. Always recommend products from our available catalog.</textarea>
                 </div>
                 <div class="mb-3">
                     <label class="form-label-custom">Gift Recommender Prompt</label>
@@ -110,7 +110,7 @@ include __DIR__ . '/../includes/header.php';
                 </div>
                 <div class="mb-3">
                     <label class="form-label-custom">Hero Generator Prompt</label>
-                    <textarea class="form-control form-control-custom" rows="3">Generate creative, engaging marketing headlines for NSBM Marketplace. Focus on campus life, student needs, and premium quality. Keep headlines short and impactful.</textarea>
+                    <textarea class="form-control form-control-custom" rows="3">Generate creative, engaging marketing headlines for GreenLink Market. Focus on campus life, student needs, and premium quality. Keep headlines short and impactful.</textarea>
                 </div>
                 <button class="btn btn-primary-custom btn-sm">
                     <i class="bi bi-check-lg me-1"></i> Save Prompts

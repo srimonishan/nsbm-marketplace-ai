@@ -1,6 +1,6 @@
 <?php
 /**
- * NSBM Marketplace AI - Application Configuration
+ * GreenLink Market - Application Configuration
  */
 
 // Error reporting (set to 0 in production)
@@ -16,7 +16,7 @@ ini_set('session.use_strict_mode', 1);
 ini_set('session.cookie_samesite', 'Lax');
 
 // Application constants
-define('APP_NAME', 'NSBM Marketplace AI');
+define('APP_NAME', 'GreenLink Market');
 define('APP_VERSION', '1.0.0');
 define('APP_URL', getenv('APP_URL') ?: 'http://localhost:8000');
 define('APP_ROOT', dirname(__DIR__));
@@ -35,8 +35,9 @@ if (is_file($localEnvFile) && is_readable($localEnvFile)) {
 }
 
 // Paths
-define('UPLOAD_PATH', APP_ROOT . '/uploads/');
-define('UPLOAD_URL', APP_URL . '/uploads/');
+define('UPLOAD_PATH', APP_ROOT . '/assets/uploads/');
+define('UPLOAD_URL', rtrim(APP_URL, '/') . '/assets/uploads/');
+define('MAX_PRODUCT_IMAGE_SIZE', 5 * 1024 * 1024);
 
 // Security
 define('CSRF_TOKEN_NAME', 'csrf_token');
@@ -109,6 +110,20 @@ function getCurrentUser(): ?array {
 
 function formatPrice(float $amount): string {
     return APP_CURRENCY_SYMBOL . ' ' . number_format($amount, 2);
+}
+
+function productImageUrl(?string $image): ?string {
+    $image = trim((string) $image);
+    if ($image === '') return null;
+
+    if (filter_var($image, FILTER_VALIDATE_URL)) {
+        $scheme = strtolower((string) parse_url($image, PHP_URL_SCHEME));
+        return in_array($scheme, ['http', 'https'], true) ? $image : null;
+    }
+
+    $path = ltrim(str_replace('\\', '/', $image), '/');
+    if ($path === '' || str_contains($path, '..')) return null;
+    return rtrim(APP_URL, '/') . '/' . $path;
 }
 
 function generateOrderNumber(): string {

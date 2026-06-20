@@ -1,6 +1,6 @@
 <?php
 /**
- * Contact Page - NSBM Marketplace AI
+ * Contact Page - GreenLink Market
  */
 $isSubPage = true;
 $pageTitle = 'Contact Us';
@@ -57,43 +57,49 @@ include __DIR__ . '/../includes/header.php';
 
             <!-- Contact Info -->
             <div class="col-lg-5" data-animate>
-                <div class="glass-card mb-4">
-                    <h4 class="mb-4">Get in Touch</h4>
-                    <div class="d-flex align-items-start gap-3 mb-4">
-                        <div class="category-icon" style="width:45px;height:45px;min-width:45px;font-size:1.1rem;">
+                <div class="glass-card contact-info-card mb-4">
+                    <div class="contact-info-heading">
+                        <span class="contact-info-eyebrow">Contact information</span>
+                        <h4>Get in Touch</h4>
+                        <p>Questions about GreenLink Market? Our campus support team is ready to help.</p>
+                    </div>
+                    <div class="contact-info-list">
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
                             <i class="bi bi-geo-alt"></i>
                         </div>
-                        <div>
-                            <h6 class="mb-1">Address</h6>
-                            <p class="text-muted-custom small mb-0">Mahenwaththa, Pitipana, Homagama, Sri Lanka</p>
+                        <div class="contact-info-content">
+                            <h6>Address</h6>
+                            <p>Mahenwaththa, Pitipana, Homagama, Sri Lanka</p>
                         </div>
                     </div>
-                    <div class="d-flex align-items-start gap-3 mb-4">
-                        <div class="category-icon" style="width:45px;height:45px;min-width:45px;font-size:1.1rem;">
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
                             <i class="bi bi-telephone"></i>
                         </div>
-                        <div>
-                            <h6 class="mb-1">Phone</h6>
-                            <p class="text-muted-custom small mb-0">+94 11 544 5000</p>
+                        <div class="contact-info-content">
+                            <h6>Phone</h6>
+                            <a href="tel:+94115445000">+94 11 544 5000</a>
                         </div>
                     </div>
-                    <div class="d-flex align-items-start gap-3 mb-4">
-                        <div class="category-icon" style="width:45px;height:45px;min-width:45px;font-size:1.1rem;">
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
                             <i class="bi bi-envelope"></i>
                         </div>
-                        <div>
-                            <h6 class="mb-1">Email</h6>
-                            <p class="text-muted-custom small mb-0">marketplace@nsbm.ac.lk</p>
+                        <div class="contact-info-content">
+                            <h6>Email</h6>
+                            <a href="mailto:marketplace@nsbm.ac.lk">marketplace@nsbm.ac.lk</a>
                         </div>
                     </div>
-                    <div class="d-flex align-items-start gap-3">
-                        <div class="category-icon" style="width:45px;height:45px;min-width:45px;font-size:1.1rem;">
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
                             <i class="bi bi-clock"></i>
                         </div>
-                        <div>
-                            <h6 class="mb-1">Hours</h6>
-                            <p class="text-muted-custom small mb-0">Mon - Fri: 8:00 AM - 6:00 PM<br>Sat: 9:00 AM - 2:00 PM</p>
+                        <div class="contact-info-content">
+                            <h6>Opening Hours</h6>
+                            <p>Mon–Fri: 8:00 AM–6:00 PM<br>Saturday: 9:00 AM–2:00 PM</p>
                         </div>
+                    </div>
                     </div>
                 </div>
 

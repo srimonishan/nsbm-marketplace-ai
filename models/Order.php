@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Model - NSBM Marketplace AI
+ * Order Model - GreenLink Market
  */
 
 class Order {

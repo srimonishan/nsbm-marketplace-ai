@@ -1,6 +1,6 @@
 <?php
 /**
- * Review Model - NSBM Marketplace AI
+ * Review Model - GreenLink Market
  */
 
 class Review {

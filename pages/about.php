@@ -1,6 +1,6 @@
 <?php
 /**
- * About Page - NSBM Marketplace AI
+ * About Page - GreenLink Market
  */
 $isSubPage = true;
 $pageTitle = 'About Us';
@@ -28,7 +28,7 @@ include __DIR__ . '/../includes/header.php';
                 <span class="badge-glass mb-3"><i class="bi bi-mortarboard me-1"></i> NSBM Green University</span>
                 <h2 class="section-title">The Future of <span class="text-gradient">Campus Shopping</span></h2>
                 <p class="text-muted-custom" style="line-height:1.8;">
-                    NSBM Marketplace AI is the premier AI-powered e-commerce platform designed exclusively for NSBM Green University students and staff. 
+                    GreenLink Market is the premier AI-powered e-commerce platform designed exclusively for NSBM Green University students and staff. 
                     We combine cutting-edge artificial intelligence with a curated selection of products to deliver a shopping experience that's smart, 
                     personalized, and perfectly tailored to campus life.
                 </p>
@@ -68,7 +68,7 @@ include __DIR__ . '/../includes/header.php';
             </div>
             <div class="col-lg-4 col-md-6" data-animate>
                 <div class="glass-card text-center h-100">
-                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #6c63ff, #8b83ff);">
+                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #087a4b, #16a66a);">
                         <i class="bi bi-robot"></i>
                     </div>
                     <h5>AI-Powered</h5>
@@ -77,7 +77,7 @@ include __DIR__ . '/../includes/header.php';
             </div>
             <div class="col-lg-4 col-md-6" data-animate>
                 <div class="glass-card text-center h-100">
-                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #00d4aa, #33e0be);">
+                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #b6e34a, #d0f27c);">
                         <i class="bi bi-shield-check"></i>
                     </div>
                     <h5>Secure & Safe</h5>
@@ -86,7 +86,7 @@ include __DIR__ . '/../includes/header.php';
             </div>
             <div class="col-lg-4 col-md-6" data-animate>
                 <div class="glass-card text-center h-100">
-                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #ff6b9d, #ff8fb5);">
+                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #f2b84b, #ffd477);">
                         <i class="bi bi-people"></i>
                     </div>
                     <h5>Community First</h5>

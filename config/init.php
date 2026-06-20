@@ -1,6 +1,6 @@
 <?php
 /**
- * NSBM Marketplace AI - Bootstrap/Initialization
+ * GreenLink Market - Bootstrap/Initialization
  * Include this file at the top of every page
  */
 

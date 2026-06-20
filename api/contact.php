@@ -1,6 +1,6 @@
 <?php
 /**
- * Contact API - NSBM Marketplace AI
+ * Contact API - GreenLink Market
  */
 
 require_once __DIR__ . '/../config/init.php';

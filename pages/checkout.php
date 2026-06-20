@@ -1,6 +1,6 @@
 <?php
 /**
- * Checkout Page - NSBM Marketplace AI
+ * Checkout Page - GreenLink Market
  */
 $isSubPage = true;
 $pageTitle = 'Checkout';
@@ -75,7 +75,7 @@ include __DIR__ . '/../includes/header.php';
                             </div>
 
                             <!-- Payment Simulation -->
-                            <div class="mt-4 p-3" style="background:rgba(108,99,255,0.1);border-radius:var(--radius-sm);border:1px dashed var(--primary);">
+                            <div class="mt-4 p-3" style="background:rgba(8, 122, 75,0.1);border-radius:var(--radius-sm);border:1px dashed var(--primary);">
                                 <p class="mb-0 small text-muted-custom">
                                     <i class="bi bi-info-circle me-1"></i>
                                     <strong>Note:</strong> This is a purchase simulation. No real payment will be processed. 

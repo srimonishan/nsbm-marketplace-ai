@@ -1,6 +1,6 @@
 <?php
 /**
- * Product Model - NSBM Marketplace AI
+ * Product Model - GreenLink Market
  */
 
 class Product {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Shopping Cart Page - NSBM Marketplace AI
+ * Shopping Cart Page - GreenLink Market
  */
 $isSubPage = true;
 $pageTitle = 'Shopping Cart';
@@ -60,7 +60,7 @@ include __DIR__ . '/../includes/header.php';
                         <span class="text-gradient" id="cartTotal"><strong>Rs. 0.00</strong></span>
                     </div>
 
-                    <div class="mt-3 mb-3 p-2 text-center" style="background:rgba(0,212,170,0.1);border-radius:var(--radius-sm);">
+                    <div class="mt-3 mb-3 p-2 text-center" style="background:rgba(182, 227, 74,0.1);border-radius:var(--radius-sm);">
                         <small class="text-muted-custom">
                             <i class="bi bi-truck me-1"></i>Free shipping on orders over Rs. 10,000
                         </small>
@@ -102,9 +102,9 @@ function renderCart() {
         html += `
             <div class="cart-item">
                 <div class="cart-item-image">
-                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, rgba(108,99,255,0.1), rgba(0,212,170,0.05));">
-                        <i class="bi bi-box-seam" style="font-size:1.5rem;color:var(--primary-light);opacity:0.5;"></i>
-                    </div>
+                    ${item.image
+                        ? `<img src="${item.image}" alt="${item.name}">`
+                        : "<div class=\"product-image-placeholder\"><i class=\"bi bi-box-seam\"></i></div>"}
                 </div>
                 <div class="flex-grow-1">
                     <h6 class="mb-1">${item.name}</h6>

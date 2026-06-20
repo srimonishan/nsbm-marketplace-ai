@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Products Management - NSBM Marketplace AI
+ * Admin Products Management - GreenLink Market
  */
 session_start();
 require_once __DIR__ . '/../../config/app.php';
@@ -50,11 +50,16 @@ include __DIR__ . '/../includes/header.php';
                 </thead>
                 <tbody>
                     <?php foreach ($products as $product): ?>
+                    <?php $adminProductImage = productImageUrl($product['image'] ?? null); ?>
                     <tr>
                         <td>
                             <div class="d-flex align-items-center gap-2">
-                                <div style="width:40px;height:40px;background:var(--gradient-card);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;">
-                                    <i class="bi bi-box-seam" style="color:var(--primary-light);"></i>
+                                <div class="admin-product-thumb">
+                                    <?php if ($adminProductImage): ?>
+                                        <img src="<?= sanitize($adminProductImage) ?>" alt="<?= sanitize($product['name']) ?>">
+                                    <?php else: ?>
+                                        <i class="bi bi-box-seam"></i>
+                                    <?php endif; ?>
                                 </div>
                                 <div>
                                     <strong style="font-size:0.85rem;"><?= sanitize(substr($product['name'], 0, 40)) ?></strong>
@@ -83,6 +88,7 @@ include __DIR__ . '/../includes/header.php';
                             </span>
                         </td>
                         <td>
+                            <?php $product['image_url_resolved'] = $adminProductImage; ?>
                             <button class="btn-action" onclick='editProduct(<?= json_encode($product) ?>)' title="Edit">
                                 <i class="bi bi-pencil"></i>
                             </button>
@@ -129,6 +135,34 @@ include __DIR__ . '/../includes/header.php';
                         <div class="col-12">
                             <label class="form-label-custom">Full Description *</label>
                             <textarea id="productDesc" class="form-control form-control-custom" rows="4" required></textarea>
+                        </div>
+                        <div class="col-12">
+                            <div class="product-image-editor">
+                                <div class="product-image-preview" id="productImagePreview">
+                                    <img id="productImagePreviewImg" src="" alt="Product image preview" hidden>
+                                    <div id="productImagePlaceholder" class="product-image-placeholder">
+                                        <i class="bi bi-image"></i>
+                                        <span>Product image preview</span>
+                                    </div>
+                                </div>
+                                <div class="product-image-controls">
+                                    <div>
+                                        <label class="form-label-custom" for="productImageFile">Upload image</label>
+                                        <input type="file" id="productImageFile" name="image_file" class="form-control form-control-custom" accept="image/jpeg,image/png,image/webp">
+                                        <small class="text-muted-custom">JPG, PNG or WebP · maximum 5 MB</small>
+                                    </div>
+                                    <div class="product-image-divider"><span>or</span></div>
+                                    <div>
+                                        <label class="form-label-custom" for="productImageUrl">Image link</label>
+                                        <input type="url" id="productImageUrl" class="form-control form-control-custom" placeholder="https://example.com/product.jpg">
+                                        <small class="text-muted-custom">Use a direct HTTP or HTTPS image URL</small>
+                                    </div>
+                                    <div class="form-check mt-2" id="removeImageWrap" hidden>
+                                        <input type="checkbox" id="productRemoveImage" class="form-check-input">
+                                        <label class="form-check-label text-muted-custom" for="productRemoveImage">Remove current image</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-custom">Price (Rs.) *</label>
@@ -177,6 +211,26 @@ function resetForm() {
     document.getElementById('productId').value = '';
     document.getElementById('productForm').reset();
     document.getElementById('productActive').checked = true;
+    document.getElementById('removeImageWrap').hidden = true;
+    setImagePreview('');
+}
+
+function setImagePreview(src) {
+    const image = document.getElementById('productImagePreviewImg');
+    const placeholder = document.getElementById('productImagePlaceholder');
+    if (!src) {
+        image.hidden = true;
+        image.removeAttribute('src');
+        placeholder.hidden = false;
+        return;
+    }
+    image.src = src;
+    image.hidden = false;
+    placeholder.hidden = true;
+    image.onerror = () => {
+        image.hidden = true;
+        placeholder.hidden = false;
+    };
 }
 
 function editProduct(product) {
@@ -192,32 +246,41 @@ function editProduct(product) {
     document.getElementById('productStock').value = product.stock_quantity;
     document.getElementById('productFeatured').checked = product.is_featured == 1;
     document.getElementById('productActive').checked = product.is_active == 1;
+    document.getElementById('productImageFile').value = '';
+    document.getElementById('productImageUrl').value = /^https?:\/\//i.test(product.image || '') ? product.image : '';
+    document.getElementById('productRemoveImage').checked = false;
+    document.getElementById('removeImageWrap').hidden = !product.image;
+    setImagePreview(product.image_url_resolved || '');
     
     new bootstrap.Modal(document.getElementById('productModal')).show();
 }
 
 async function saveProduct() {
     const id = document.getElementById('productId').value;
-    const data = {
-        name: document.getElementById('productName').value,
-        category_id: document.getElementById('productCategory').value,
-        short_description: document.getElementById('productShortDesc').value,
-        description: document.getElementById('productDesc').value,
-        price: document.getElementById('productPrice').value,
-        sale_price: document.getElementById('productSalePrice').value || null,
-        sku: document.getElementById('productSku').value,
-        stock_quantity: document.getElementById('productStock').value,
-        is_featured: document.getElementById('productFeatured').checked ? 1 : 0,
-        is_active: document.getElementById('productActive').checked ? 1 : 0
-    };
+    const form = document.getElementById('productForm');
+    if (!form.reportValidity()) return;
+
+    const data = new FormData();
+    data.append('name', document.getElementById('productName').value);
+    data.append('category_id', document.getElementById('productCategory').value);
+    data.append('short_description', document.getElementById('productShortDesc').value);
+    data.append('description', document.getElementById('productDesc').value);
+    data.append('price', document.getElementById('productPrice').value);
+    data.append('sale_price', document.getElementById('productSalePrice').value);
+    data.append('sku', document.getElementById('productSku').value);
+    data.append('stock_quantity', document.getElementById('productStock').value);
+    data.append('is_featured', document.getElementById('productFeatured').checked ? '1' : '0');
+    data.append('is_active', document.getElementById('productActive').checked ? '1' : '0');
+    data.append('image_url', document.getElementById('productImageUrl').value.trim());
+    data.append('remove_image', document.getElementById('productRemoveImage').checked ? '1' : '0');
+    const imageFile = document.getElementById('productImageFile').files[0];
+    if (imageFile) data.append('image_file', imageFile);
+    if (id) data.append('_method', 'PUT');
 
     const url = id ? `../../api/products.php?id=${id}` : '../../api/products.php';
-    const method = id ? 'PUT' : 'POST';
-
     const response = await fetch(url, {
-        method: method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        method: 'POST',
+        body: data
     });
     const result = await response.json();
 
@@ -228,6 +291,32 @@ async function saveProduct() {
         showToast(result.message || 'Error saving product', 'error');
     }
 }
+
+document.getElementById('productImageFile').addEventListener('change', event => {
+    const file = event.target.files[0];
+    if (file) {
+        document.getElementById('productImageUrl').value = '';
+        document.getElementById('productRemoveImage').checked = false;
+        setImagePreview(URL.createObjectURL(file));
+    }
+});
+
+document.getElementById('productImageUrl').addEventListener('input', event => {
+    const url = event.target.value.trim();
+    if (url) {
+        document.getElementById('productImageFile').value = '';
+        document.getElementById('productRemoveImage').checked = false;
+    }
+    setImagePreview(url);
+});
+
+document.getElementById('productRemoveImage').addEventListener('change', event => {
+    if (event.target.checked) {
+        document.getElementById('productImageFile').value = '';
+        document.getElementById('productImageUrl').value = '';
+        setImagePreview('');
+    }
+});
 
 async function deleteProduct(id) {
     if (!confirm('Are you sure you want to delete this product?')) return;

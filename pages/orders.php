@@ -1,6 +1,6 @@
 <?php
 /**
- * My Orders Page - NSBM Marketplace AI
+ * My Orders Page - GreenLink Market
  */
 $isSubPage = true;
 $pageTitle = 'My Orders';
@@ -56,8 +56,8 @@ async function loadOrders() {
             const statusColors = {
                 pending: "#ffc107",
                 processing: "#17a2b8",
-                shipped: "#6c63ff",
-                delivered: "#00d4aa",
+                shipped: "#087a4b",
+                delivered: "#b6e34a",
                 cancelled: "#dc3545",
                 refunded: "#6c757d"
             };

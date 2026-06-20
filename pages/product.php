@@ -1,6 +1,6 @@
 <?php
 /**
- * Product Detail Page - NSBM Marketplace AI
+ * Product Detail Page - GreenLink Market
  */
 $isSubPage = true;
 require_once __DIR__ . '/../config/init.php';
@@ -46,9 +46,12 @@ include __DIR__ . '/../includes/header.php';
             <!-- Product Image -->
             <div class="col-lg-6" data-animate>
                 <div class="product-detail-image">
-                    <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:linear-gradient(135deg, rgba(108,99,255,0.1), rgba(0,212,170,0.05));">
-                        <i class="bi bi-box-seam" style="font-size:6rem;color:var(--primary-light);opacity:0.5;"></i>
-                    </div>
+                    <?php $productImage = productImageUrl($product['image'] ?? null); ?>
+                    <?php if ($productImage): ?>
+                        <img src="<?= sanitize($productImage) ?>" alt="<?= sanitize($product['name']) ?>">
+                    <?php else: ?>
+                        <div class="product-image-placeholder product-image-placeholder-large"><i class="bi bi-box-seam"></i></div>
+                    <?php endif; ?>
                 </div>
                 <?php if ($hasDiscount): ?>
                     <div class="mt-3 text-center">
@@ -90,7 +93,7 @@ include __DIR__ . '/../includes/header.php';
                     <!-- Stock Status -->
                     <div class="mb-4">
                         <?php if ($product['stock_quantity'] > 0): ?>
-                            <span class="badge" style="background:rgba(0,212,170,0.2);color:var(--secondary);padding:0.5rem 1rem;">
+                            <span class="badge" style="background:rgba(182, 227, 74,0.2);color:var(--secondary);padding:0.5rem 1rem;">
                                 <i class="bi bi-check-circle me-1"></i> In Stock (<?= $product['stock_quantity'] ?> available)
                             </span>
                         <?php else: ?>
@@ -175,13 +178,16 @@ include __DIR__ . '/../includes/header.php';
             <div class="row g-4">
                 <?php foreach ($relatedProducts as $related): 
                     $rPrice = $related['sale_price'] ?: $related['price'];
+                    $relatedImage = productImageUrl($related['image'] ?? null);
                 ?>
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="product-card">
                         <div class="product-card-image">
-                            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, rgba(108,99,255,0.1), rgba(0,212,170,0.05));">
-                                <i class="bi bi-box-seam" style="font-size:3rem;color:var(--primary-light);opacity:0.5;"></i>
-                            </div>
+                            <?php if ($relatedImage): ?>
+                                <img src="<?= sanitize($relatedImage) ?>" alt="<?= sanitize($related['name']) ?>" loading="lazy">
+                            <?php else: ?>
+                                <div class="product-image-placeholder"><i class="bi bi-box-seam"></i></div>
+                            <?php endif; ?>
                         </div>
                         <div class="product-card-body">
                             <h5 class="product-title"><?= sanitize($related['name']) ?></h5>
@@ -204,7 +210,7 @@ include __DIR__ . '/../includes/header.php';
 <?php
 $extraScripts = '
 <script>
-const productData = ' . json_encode(["id" => $product["id"], "name" => $product["name"], "price" => (float)$price, "sale_price" => $product["sale_price"], "image" => $product["image"], "stock_quantity" => $product["stock_quantity"]]) . ';
+const productData = ' . json_encode(["id" => $product["id"], "name" => $product["name"], "price" => (float)$price, "sale_price" => $product["sale_price"], "image" => productImageUrl($product["image"] ?? null), "stock_quantity" => $product["stock_quantity"]]) . ';
 
 function changeQty(delta) {
     const input = document.getElementById("productQty");

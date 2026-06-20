@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Categories Management - NSBM Marketplace AI
+ * Admin Categories Management - GreenLink Market
  */
 session_start();
 require_once __DIR__ . '/../../config/app.php';

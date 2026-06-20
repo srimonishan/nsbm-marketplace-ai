@@ -1,5 +1,5 @@
 /**
- * NSBM Marketplace AI - Main Application JavaScript
+ * GreenLink Market - Main Application JavaScript
  * Vanilla JS - No frameworks
  */
 
@@ -355,9 +355,9 @@ function renderProductCard(product) {
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4" data-animate>
             <div class="product-card">
                 <div class="product-card-image">
-                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, rgba(108,99,255,0.1), rgba(0,212,170,0.05));">
-                        <i class="bi bi-box-seam" style="font-size:3rem;color:var(--primary-light);opacity:0.5;"></i>
-                    </div>
+                    ${product.image_url
+                        ? `<img src="${product.image_url}" alt="${product.name}" loading="lazy">`
+                        : '<div class="product-image-placeholder"><i class="bi bi-box-seam"></i></div>'}
                     ${hasDiscount ? `<span class="product-badge product-badge-sale">-${discount}%</span>` : ''}
                     ${product.is_featured ? `<span class="product-badge product-badge-featured">Featured</span>` : ''}
                 </div>
@@ -375,7 +375,7 @@ function renderProductCard(product) {
                 </div>
                 <div class="product-card-actions">
                     <a href="pages/product.php?id=${product.id}" class="btn btn-outline-custom btn-sm">View</a>
-                    <button class="btn btn-primary-custom btn-sm" onclick='Cart.add(${JSON.stringify({id: product.id, name: product.name, price: parseFloat(price), sale_price: product.sale_price, image: product.image, stock_quantity: product.stock_quantity})})'>
+                    <button class="btn btn-primary-custom btn-sm" onclick='Cart.add(${JSON.stringify({id: product.id, name: product.name, price: parseFloat(price), sale_price: product.sale_price, image: product.image_url || product.image, stock_quantity: product.stock_quantity})})'>
                         <i class="bi bi-cart-plus"></i> Add
                     </button>
                 </div>

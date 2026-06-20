@@ -5,7 +5,7 @@
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
-                    <div class="footer-brand">NSBM Marketplace AI</div>
+                    <div class="footer-brand">GreenLink Market</div>
                     <p class="footer-text">
                         The premier AI-powered marketplace exclusively for NSBM Green University students and staff. 
                         Discover, shop, and experience intelligent shopping like never before.
@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; <?= date('Y') ?> NSBM Marketplace AI. All rights reserved. Built with <i class="bi bi-heart-fill text-danger"></i> for NSBM Green University.</p>
+                <p>&copy; <?= date('Y') ?> GreenLink Market. All rights reserved. Built with <i class="bi bi-heart-fill text-danger"></i> for NSBM Green University.</p>
             </div>
         </div>
     </footer>

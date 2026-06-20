@@ -1,6 +1,6 @@
 <?php
 /**
- * Gemini AI API Endpoint - NSBM Marketplace AI
+ * Gemini AI API Endpoint - GreenLink Market
  * 
  * Handles:
  * - Shopping Assistant (chat with product recommendations)
@@ -61,7 +61,7 @@ function handleChat() {
     $productCatalog = buildProductCatalog($products, $categories);
     
     // Build the prompt
-    $systemPrompt = "You are an AI Shopping Assistant for NSBM Marketplace, the exclusive e-commerce platform for NSBM Green University students and staff in Sri Lanka.
+    $systemPrompt = "You are an AI Shopping Assistant for GreenLink Market, the exclusive e-commerce platform for NSBM Green University students and staff in Sri Lanka.
 
 Your role:
 - Help students find products they need
@@ -146,7 +146,7 @@ function handleGiftRecommendation() {
     $products = $productModel->getAll(50, 0);
     $productCatalog = buildProductCatalog($products, []);
 
-    $prompt = "You are a Gift Recommendation Expert for NSBM Marketplace (NSBM Green University, Sri Lanka).
+    $prompt = "You are a Gift Recommendation Expert for GreenLink Market (NSBM Green University, Sri Lanka).
 
 A student needs help finding a gift. Analyze their request and suggest the BEST matching products from our catalog.
 
@@ -214,7 +214,7 @@ function handleHeroGeneration() {
     $productNames = array_column($featuredProducts, 'name');
     $productList = implode(', ', array_slice($productNames, 0, 5));
 
-    $prompt = "You are a creative marketing copywriter for NSBM Marketplace, an AI-powered e-commerce platform for NSBM Green University students in Sri Lanka.
+    $prompt = "You are a creative marketing copywriter for GreenLink Market, an AI-powered e-commerce platform for NSBM Green University students in Sri Lanka.
 
 Generate fresh, engaging marketing content for our homepage hero section.
 
@@ -275,7 +275,7 @@ Requirements:
             ],
             [
                 'headline' => '<span class="gradient-text">Premium</span> Products for <span class="gradient-text">Campus Life</span>',
-                'subtitle' => 'The exclusive NSBM marketplace with AI-driven recommendations and seamless shopping.',
+                'subtitle' => 'GreenLink Market brings AI-driven recommendations and seamless shopping to campus life.',
                 'cta' => 'Browse Now'
             ]
         ];
@@ -290,7 +290,7 @@ Requirements:
  */
 function handleTest() {
     $messages = [
-        ['role' => 'user', 'parts' => [['text' => 'Say "Hello! Gemini API is connected successfully to NSBM Marketplace AI." in exactly those words.']]]
+        ['role' => 'user', 'parts' => [['text' => 'Say "Hello! Gemini API is connected successfully to GreenLink Market." in exactly those words.']]]
     ];
     
     $response = callGeminiAPI($messages);
@@ -539,7 +539,7 @@ function generateFallbackResponse($message, $products) {
     // Generic response
     $responses = [
         "I'd be happy to help you find products! Could you tell me more about what you're looking for? We have categories like Electronics, Books, Fashion, Food, Sports, and more.",
-        "Welcome to NSBM Marketplace! I can help you find the perfect product. What category are you interested in, or do you have a specific item in mind?",
+        "Welcome to GreenLink Market! I can help you find the perfect product. What category are you interested in, or do you have a specific item in mind?",
         "Hi there! I'm your AI shopping assistant. Tell me what you need - whether it's for studies, sports, fashion, or daily campus life - and I'll find the best options for you!"
     ];
     

@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Dashboard - NSBM Marketplace AI
+ * Admin Dashboard - GreenLink Market
  */
 session_start();
 require_once __DIR__ . '/../config/app.php';
@@ -45,7 +45,7 @@ include __DIR__ . '/includes/header.php';
 <div class="row g-4 mb-4">
     <div class="col-xl-3 col-md-6">
         <div class="stat-card">
-            <div class="stat-card-icon" style="background:rgba(108,99,255,0.15);color:var(--primary);">
+            <div class="stat-card-icon" style="background:rgba(8, 122, 75,0.15);color:var(--primary);">
                 <i class="bi bi-box-seam"></i>
             </div>
             <div class="stat-card-value"><?= number_format($totalProducts) ?></div>
@@ -55,7 +55,7 @@ include __DIR__ . '/includes/header.php';
     </div>
     <div class="col-xl-3 col-md-6">
         <div class="stat-card">
-            <div class="stat-card-icon" style="background:rgba(0,212,170,0.15);color:var(--secondary);">
+            <div class="stat-card-icon" style="background:rgba(182, 227, 74,0.15);color:var(--secondary);">
                 <i class="bi bi-people"></i>
             </div>
             <div class="stat-card-value"><?= number_format($totalCustomers) ?></div>
@@ -210,12 +210,12 @@ new Chart(revenueCtx, {
         datasets: [{
             label: 'Revenue (Rs.)',
             data: [45000, 62000, 38000, 89000, 55000, 72000, 94999],
-            borderColor: '#6c63ff',
-            backgroundColor: 'rgba(108, 99, 255, 0.1)',
+            borderColor: '#087a4b',
+            backgroundColor: 'rgba(8, 122, 75, 0.1)',
             borderWidth: 3,
             fill: true,
             tension: 0.4,
-            pointBackgroundColor: '#6c63ff',
+            pointBackgroundColor: '#087a4b',
             pointBorderColor: '#fff',
             pointBorderWidth: 2,
             pointRadius: 5
@@ -248,7 +248,7 @@ new Chart(statusCtx, {
         labels: ['Delivered', 'Processing', 'Shipped', 'Pending', 'Cancelled'],
         datasets: [{
             data: [<?= $orderStatus['delivered'] ?? 2 ?>, <?= $orderStatus['processing'] ?? 1 ?>, <?= $orderStatus['shipped'] ?? 1 ?>, <?= $orderStatus['pending'] ?? 1 ?>, <?= $orderStatus['cancelled'] ?? 0 ?>],
-            backgroundColor: ['#00d4aa', '#17a2b8', '#6c63ff', '#ffc107', '#dc3545'],
+            backgroundColor: ['#b6e34a', '#17a2b8', '#087a4b', '#ffc107', '#dc3545'],
             borderWidth: 0
         }]
     },

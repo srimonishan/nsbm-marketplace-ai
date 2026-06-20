@@ -1,6 +1,6 @@
 <?php
 /**
- * Category Model - NSBM Marketplace AI
+ * Category Model - GreenLink Market
  */
 
 class Category {

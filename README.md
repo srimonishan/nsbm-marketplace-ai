@@ -77,6 +77,19 @@ GreenLink Market is a full-stack web application featuring:
 
 4. **Delete install.php** after successful installation
 
+### Persistent Local Development
+
+From the project directory, run:
+
+```bash
+./run-dev.sh
+```
+
+This starts PHP and a project-local MariaDB database. Database records are kept in
+`.data/`, while uploaded product images are kept in `assets/uploads/products/`.
+The seed data is loaded only on the first run, so products and uploaded images
+remain available after stopping and restarting the development server.
+
 ### Manual Install
 
 1. **Create the database:**

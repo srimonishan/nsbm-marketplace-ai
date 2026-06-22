@@ -2,14 +2,7 @@
 /**
  * Admin Customers Management - GreenLink Market
  */
-session_start();
-require_once __DIR__ . '/../../config/app.php';
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../../models/Product.php';
-require_once __DIR__ . '/../../models/Category.php';
-require_once __DIR__ . '/../../models/User.php';
-require_once __DIR__ . '/../../models/Order.php';
-require_once __DIR__ . '/../../models/Review.php';
+require_once __DIR__ . '/../../config/init.php';
 
 $currentPage = 'customers';
 $pageTitle = 'Customer Management';
@@ -71,7 +64,7 @@ include __DIR__ . '/../includes/header.php';
 
 <script>
 async function toggleStatus(id, status) {
-    const response = await fetch(`../../api/admin.php?action=update_customer&id=${id}`, {
+    const response = await adminFetch(`../../api/admin.php?action=update_customer&id=${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })

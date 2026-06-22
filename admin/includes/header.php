@@ -1,6 +1,11 @@
 <?php
 if (!isset($currentPage)) $currentPage = 'dashboard';
 if (!isset($pageTitle)) $pageTitle = 'Dashboard';
+
+if (!isAdmin()) {
+    $loginPath = strpos($_SERVER['PHP_SELF'], '/pages/') !== false ? '../login.php' : 'login.php';
+    redirect($loginPath);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -59,7 +64,7 @@ if (!isset($pageTitle)) $pageTitle = 'Dashboard';
                 <a href="<?= strpos($_SERVER['PHP_SELF'], '/pages/') !== false ? '' : 'pages/' ?>messages.php" class="admin-nav-link <?= $currentPage === 'messages' ? 'active' : '' ?>">
                     <i class="bi bi-envelope"></i> Messages
                 </a>
-                <a href="<?= strpos($_SERVER['PHP_SELF'], '/pages/') !== false ? '../' : '' ?>../index.php" class="admin-nav-link">
+                <a href="#" class="admin-nav-link" onclick="adminViewStore(event)">
                     <i class="bi bi-house"></i> View Store
                 </a>
                 <a href="#" class="admin-nav-link" onclick="adminLogout()">

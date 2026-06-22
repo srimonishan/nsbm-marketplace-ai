@@ -12,17 +12,23 @@ $orderModel = new Order();
 
 switch ($method) {
     case 'GET':
+        if (!isLoggedIn()) {
+            jsonResponse(['success' => false, 'message' => 'Please login to view orders'], 401);
+        }
+
         if (isset($_GET['id'])) {
             $order = $orderModel->getById((int)$_GET['id']);
-            if ($order) {
+            if ($order && (isAdmin() || (int) $order['user_id'] === (int) $_SESSION['user_id'])) {
                 $order['items'] = $orderModel->getItems($order['id']);
                 jsonResponse(['success' => true, 'data' => $order]);
+            } elseif ($order) {
+                jsonResponse(['success' => false, 'message' => 'Unauthorized'], 403);
             } else {
                 jsonResponse(['success' => false, 'message' => 'Order not found'], 404);
             }
         } else {
             $filters = [];
-            if (!isAdmin() && isLoggedIn()) {
+            if (!isAdmin()) {
                 $filters['user_id'] = $_SESSION['user_id'];
             }
             if (isset($_GET['status'])) {
@@ -50,7 +56,7 @@ switch ($method) {
         break;
 
     case 'POST':
-        if (!isLoggedIn()) {
+        if (!isLoggedIn() || isAdmin()) {
             jsonResponse(['success' => false, 'message' => 'Please login to place an order'], 401);
         }
 
@@ -124,15 +130,51 @@ switch ($method) {
         
         $data = json_decode(file_get_contents('php://input'), true);
         $id = (int)($_GET['id'] ?? 0);
-        
+
         if (!empty($data['status'])) {
-            $orderModel->updateStatus($id, $data['status']);
+            $allowedStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+            $status = strtolower(trim((string) $data['status']));
+            if (!in_array($status, $allowedStatuses, true)) {
+                jsonResponse(['success' => false, 'message' => 'Invalid order status'], 422);
+            }
+
+            $order = $orderModel->getById($id);
+            if (!$order) {
+                jsonResponse(['success' => false, 'message' => 'Order not found'], 404);
+            }
+
+            $notificationCreated = false;
+            if ($order['status'] !== $status) {
+                $db = Database::getInstance()->getConnection();
+                try {
+                    $db->beginTransaction();
+                    if (!$orderModel->updateStatus($id, $status)) {
+                        throw new RuntimeException('Could not update order status');
+                    }
+                    $notificationModel = new Notification();
+                    $notificationModel->createOrderStatusNotification($order, $status);
+                    $db->commit();
+                    $notificationCreated = true;
+                } catch (Throwable $e) {
+                    if ($db->inTransaction()) {
+                        $db->rollBack();
+                    }
+                    error_log('Order status update failed: ' . $e->getMessage());
+                    jsonResponse(['success' => false, 'message' => 'Could not update order status'], 500);
+                }
+            }
         }
         if (!empty($data['payment_status'])) {
             $orderModel->updatePaymentStatus($id, $data['payment_status']);
         }
         
-        jsonResponse(['success' => true, 'message' => 'Order updated']);
+        jsonResponse([
+            'success' => true,
+            'message' => !empty($notificationCreated)
+                ? 'Order status updated and customer notified'
+                : 'Order status unchanged',
+            'data' => ['status' => $status ?? null, 'notification_created' => !empty($notificationCreated)]
+        ]);
         break;
 
     default:

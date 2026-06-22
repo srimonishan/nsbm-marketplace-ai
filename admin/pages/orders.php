@@ -2,14 +2,7 @@
 /**
  * Admin Orders Management - GreenLink Market
  */
-session_start();
-require_once __DIR__ . '/../../config/app.php';
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../../models/Product.php';
-require_once __DIR__ . '/../../models/Category.php';
-require_once __DIR__ . '/../../models/User.php';
-require_once __DIR__ . '/../../models/Order.php';
-require_once __DIR__ . '/../../models/Review.php';
+require_once __DIR__ . '/../../config/init.php';
 
 $currentPage = 'orders';
 $pageTitle = 'Order Management';
@@ -65,8 +58,9 @@ include __DIR__ . '/../includes/header.php';
                         <td><strong><?= formatPrice($order['total']) ?></strong></td>
                         <td><span class="status-badge status-<?= $order['payment_status'] ?>"><?= ucfirst($order['payment_status']) ?></span></td>
                         <td>
-                            <select class="form-control form-control-custom form-control-sm" style="width:auto;font-size:0.8rem;" 
-                                    onchange="updateOrderStatus(<?= $order['id'] ?>, this.value)">
+                            <select class="form-control form-control-custom form-control-sm" style="width:auto;font-size:0.8rem;"
+                                    data-current-status="<?= sanitize($order['status']) ?>"
+                                    onchange="updateOrderStatus(<?= $order['id'] ?>, this)">
                                 <option value="pending" <?= $order['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
                                 <option value="processing" <?= $order['status'] === 'processing' ? 'selected' : '' ?>>Processing</option>
                                 <option value="shipped" <?= $order['status'] === 'shipped' ? 'selected' : '' ?>>Shipped</option>
@@ -107,22 +101,37 @@ include __DIR__ . '/../includes/header.php';
 </div>
 
 <script>
-async function updateOrderStatus(orderId, status) {
-    const response = await fetch(`../../api/orders.php?id=${orderId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
-    });
-    const result = await response.json();
-    if (result.success) showToast('Order status updated');
-    else showToast('Update failed', 'error');
+async function updateOrderStatus(orderId, select) {
+    const previousStatus = select.dataset.currentStatus;
+    const status = select.value;
+    select.disabled = true;
+
+    try {
+        const response = await adminFetch(`../../api/orders.php?id=${orderId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Update failed');
+        }
+
+        select.dataset.currentStatus = status;
+        showToast('Order status updated and customer notified');
+    } catch (error) {
+        select.value = previousStatus;
+        showToast(error.message || 'Update failed', 'error');
+    } finally {
+        select.disabled = false;
+    }
 }
 
 async function viewOrder(orderId) {
     const modal = new bootstrap.Modal(document.getElementById('orderDetailModal'));
     modal.show();
     
-    const response = await fetch(`../../api/orders.php?id=${orderId}`);
+    const response = await adminFetch(`../../api/orders.php?id=${orderId}`);
     const result = await response.json();
     
     if (result.success) {

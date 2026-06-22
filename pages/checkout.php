@@ -5,6 +5,11 @@
 $isSubPage = true;
 $pageTitle = 'Checkout';
 require_once __DIR__ . '/../config/init.php';
+
+if (isAdmin()) {
+    redirect('../admin/index.php');
+}
+
 include __DIR__ . '/../includes/header.php';
 ?>
 

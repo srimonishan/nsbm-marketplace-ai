@@ -9,9 +9,17 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/../logs/error.log');
 
-// Session configuration
+// Session configuration (30 days, or until the user explicitly logs out)
+$sessionLifetime = 30 * 24 * 60 * 60;
+$isHttps = (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off')
+    || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https')
+    || ((int) ($_SERVER['SERVER_PORT'] ?? 0) === 443);
+
 ini_set('session.cookie_httponly', 1);
-ini_set('session.cookie_secure', 0); // Set to 1 in production with HTTPS
+ini_set('session.cookie_secure', $isHttps ? '1' : '0');
+ini_set('session.cookie_path', '/');
+ini_set('session.cookie_lifetime', (string) $sessionLifetime);
+ini_set('session.gc_maxlifetime', (string) $sessionLifetime);
 ini_set('session.use_strict_mode', 1);
 ini_set('session.cookie_samesite', 'Lax');
 
@@ -139,7 +147,11 @@ function slugify(string $text): string {
     return strtolower($text);
 }
 
-function jsonResponse($successOrData, string $message = '', $data = null, int $statusCode = 200): void {
+function jsonResponse($successOrData, string|int $message = '', $data = null, int $statusCode = 200): void {
+    if (is_array($successOrData) && is_int($message)) {
+        $statusCode = $message;
+    }
+
     http_response_code($statusCode);
     header('Content-Type: application/json');
     
@@ -148,7 +160,7 @@ function jsonResponse($successOrData, string $message = '', $data = null, int $s
         echo json_encode($successOrData);
     } else {
         // New call: jsonResponse(true/false, 'message', data)
-        $response = ['success' => (bool)$successOrData, 'message' => $message];
+        $response = ['success' => (bool)$successOrData, 'message' => (string) $message];
         if ($data !== null) {
             $response['data'] = $data;
         }

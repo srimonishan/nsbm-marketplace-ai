@@ -2,14 +2,7 @@
 /**
  * Admin Categories Management - GreenLink Market
  */
-session_start();
-require_once __DIR__ . '/../../config/app.php';
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../../models/Product.php';
-require_once __DIR__ . '/../../models/Category.php';
-require_once __DIR__ . '/../../models/User.php';
-require_once __DIR__ . '/../../models/Order.php';
-require_once __DIR__ . '/../../models/Review.php';
+require_once __DIR__ . '/../../config/init.php';
 
 $currentPage = 'categories';
 $pageTitle = 'Categories Management';
@@ -129,7 +122,7 @@ async function saveCategory() {
     const url = id ? `../../api/categories.php?id=${id}` : '../../api/categories.php';
     const method = id ? 'PUT' : 'POST';
 
-    const response = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    const response = await adminFetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
     const result = await response.json();
 
     if (result.success) {
@@ -142,7 +135,7 @@ async function saveCategory() {
 
 async function deleteCategory(id) {
     if (!confirm('Delete this category? Products in this category will also be affected.')) return;
-    const response = await fetch(`../../api/categories.php?id=${id}`, { method: 'DELETE' });
+    const response = await adminFetch(`../../api/categories.php?id=${id}`, { method: 'DELETE' });
     const result = await response.json();
     if (result.success) { showToast('Deleted'); setTimeout(() => location.reload(), 1000); }
     else { showToast('Failed', 'error'); }

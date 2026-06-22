@@ -10,17 +10,24 @@ header('Content-Type: application/json');
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? '';
 
-if ($method !== 'POST') {
+if ($action === 'check' && $method !== 'GET') {
     jsonResponse(['success' => false, 'message' => 'Method not allowed'], 405);
 }
 
-$data = json_decode(file_get_contents('php://input'), true);
+if ($action !== 'check' && $method !== 'POST') {
+    jsonResponse(['success' => false, 'message' => 'Method not allowed'], 405);
+}
+
+$data = $method === 'POST'
+    ? (json_decode(file_get_contents('php://input'), true) ?: [])
+    : [];
 $userModel = new User();
 
 switch ($action) {
     case 'login':
         $email = trim($data['email'] ?? '');
         $password = $data['password'] ?? '';
+        $requestedRole = ($data['role'] ?? 'customer') === 'admin' ? 'admin' : 'customer';
 
         if (empty($email) || empty($password)) {
             jsonResponse(['success' => false, 'message' => 'Email and password are required'], 400);
@@ -28,6 +35,14 @@ switch ($action) {
 
         $user = $userModel->authenticate($email, $password);
         if ($user) {
+            if ($requestedRole === 'admin' && $user['role'] !== 'admin') {
+                jsonResponse(['success' => false, 'message' => 'This account does not have admin access'], 403);
+            }
+            if ($requestedRole === 'customer' && $user['role'] === 'admin') {
+                jsonResponse(['success' => false, 'message' => 'Please use the Admin Login page'], 403);
+            }
+
+            session_regenerate_id(true);
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['first_name'] . ' ' . $user['last_name'];
             $_SESSION['user_email'] = $user['email'];
@@ -85,6 +100,7 @@ switch ($action) {
                 'password' => $password
             ]);
 
+            session_regenerate_id(true);
             $_SESSION['user_id'] = $userId;
             $_SESSION['user_name'] = $firstName . ' ' . $lastName;
             $_SESSION['user_email'] = $email;
@@ -106,6 +122,18 @@ switch ($action) {
         break;
 
     case 'logout':
+        $_SESSION = [];
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', [
+                'expires' => time() - 42000,
+                'path' => $params['path'],
+                'domain' => $params['domain'],
+                'secure' => $params['secure'],
+                'httponly' => $params['httponly'],
+                'samesite' => $params['samesite'] ?? 'Lax'
+            ]);
+        }
         session_destroy();
         jsonResponse(['success' => true, 'message' => 'Logged out successfully']);
         break;

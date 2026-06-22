@@ -2,14 +2,7 @@
 /**
  * Admin AI Settings - GreenLink Market
  */
-session_start();
-require_once __DIR__ . '/../../config/app.php';
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../../models/Product.php';
-require_once __DIR__ . '/../../models/Category.php';
-require_once __DIR__ . '/../../models/User.php';
-require_once __DIR__ . '/../../models/Order.php';
-require_once __DIR__ . '/../../models/Review.php';
+require_once __DIR__ . '/../../config/init.php';
 
 $currentPage = 'ai-settings';
 $pageTitle = 'AI Settings';
@@ -129,7 +122,7 @@ function toggleKeyVisibility() {
 async function testConnection() {
     showToast('Testing Gemini API connection...');
     try {
-        const response = await fetch('../../api/ai.php?action=test', {
+        const response = await adminFetch('../../api/ai.php?action=test', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: '{}'

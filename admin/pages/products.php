@@ -2,14 +2,7 @@
 /**
  * Admin Products Management - GreenLink Market
  */
-session_start();
-require_once __DIR__ . '/../../config/app.php';
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../../models/Product.php';
-require_once __DIR__ . '/../../models/Category.php';
-require_once __DIR__ . '/../../models/User.php';
-require_once __DIR__ . '/../../models/Order.php';
-require_once __DIR__ . '/../../models/Review.php';
+require_once __DIR__ . '/../../config/init.php';
 
 $currentPage = 'products';
 $pageTitle = 'Products Management';
@@ -278,7 +271,7 @@ async function saveProduct() {
     if (id) data.append('_method', 'PUT');
 
     const url = id ? `../../api/products.php?id=${id}` : '../../api/products.php';
-    const response = await fetch(url, {
+    const response = await adminFetch(url, {
         method: 'POST',
         body: data
     });
@@ -321,7 +314,7 @@ document.getElementById('productRemoveImage').addEventListener('change', event =
 async function deleteProduct(id) {
     if (!confirm('Are you sure you want to delete this product?')) return;
     
-    const response = await fetch(`../../api/products.php?id=${id}`, { method: 'DELETE' });
+    const response = await adminFetch(`../../api/products.php?id=${id}`, { method: 'DELETE' });
     const result = await response.json();
     
     if (result.success) {

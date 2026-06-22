@@ -4,13 +4,31 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const adminRootPath = <?= json_encode(strpos($_SERVER['PHP_SELF'], '/pages/') !== false ? '../../' : '../') ?>;
+
+        function adminFetch(url, options = {}) {
+            return fetch(url, {
+                ...options,
+                credentials: 'same-origin',
+                headers: {
+                    ...(options.headers || {}),
+                    'X-GreenLink-Portal': 'admin'
+                }
+            });
+        }
+
         function toggleSidebar() {
             document.getElementById('adminSidebar').classList.toggle('active');
         }
 
         async function adminLogout() {
-            await fetch('../api/auth.php?action=logout', { method: 'POST' });
-            window.location.href = '../index.php';
+            await adminFetch(adminRootPath + 'api/auth.php?action=logout', { method: 'POST' });
+            window.location.href = adminRootPath + 'index.php';
+        }
+
+        async function adminViewStore(event) {
+            event.preventDefault();
+            await adminLogout();
         }
 
         // Toast for admin

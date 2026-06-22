@@ -3,6 +3,10 @@ if (session_status() === PHP_SESSION_NONE) {
     require_once __DIR__ . '/../config/init.php';
 }
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
+
+if (isAdmin()) {
+    redirect(!empty($isSubPage) ? '../admin/index.php' : 'admin/index.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -19,7 +23,7 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="<?= isset($isSubPage) ? '../' : '' ?>assets/css/style.css?v=1.0.1" rel="stylesheet">
+    <link href="<?= isset($isSubPage) ? '../' : '' ?>assets/css/style.css?v=1.0.3" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->
@@ -74,6 +78,23 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                         <i class="bi bi-cart3"></i>
                         <span class="nav-cart-badge cart-count" style="display:none;">0</span>
                     </a>
+
+                    <!-- Customer Notifications -->
+                    <div class="dropdown user-links customer-notification-links" style="display:none;">
+                        <button class="btn btn-glass btn-sm position-relative" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-label="Notifications" title="Notifications">
+                            <i class="bi bi-bell"></i>
+                            <span class="notification-badge" id="notificationBadge" style="display:none;">0</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end notification-dropdown">
+                            <div class="notification-header">
+                                <strong>Notifications</strong>
+                                <button type="button" onclick="Notifications.markAllRead()">Mark all read</button>
+                            </div>
+                            <div id="notificationList" class="notification-list">
+                                <div class="notification-empty">No notifications yet</div>
+                            </div>
+                        </div>
+                    </div>
                     
                     <!-- Auth Links -->
                     <div class="auth-links">
@@ -83,17 +104,20 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                     </div>
                     
                     <!-- User Links (shown when logged in) -->
-                    <div class="user-links dropdown" style="display:none;">
+                    <div class="user-links customer-user-links dropdown" style="display:none;">
                         <button class="btn btn-glass btn-sm dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-person-circle me-1"></i> <span class="user-name">User</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" style="background:var(--bg-card);border:1px solid var(--border-glass);">
                             <li><a class="dropdown-item text-light" href="<?= isset($isSubPage) ? '' : 'pages/' ?>orders.php"><i class="bi bi-bag me-2"></i>My Orders</a></li>
-                            <li><a class="dropdown-item text-light" href="<?= isset($isSubPage) ? '../' : '' ?>admin/index.php"><i class="bi bi-speedometer2 me-2"></i>Admin Panel</a></li>
                             <li><hr class="dropdown-divider" style="border-color:var(--border-glass);"></li>
                             <li><a class="dropdown-item text-light" href="#" onclick="Auth.logout()"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
                         </ul>
                     </div>
+
+                    <button type="button" class="btn btn-outline-custom btn-sm user-links" style="display:none;" onclick="Auth.logout()" title="Logout">
+                        <i class="bi bi-box-arrow-right me-1"></i>Logout
+                    </button>
                 </div>
             </div>
         </div>

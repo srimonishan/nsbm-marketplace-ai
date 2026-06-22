@@ -139,7 +139,9 @@ const Toast = {
 const API = {
     async get(endpoint) {
         try {
-            const response = await fetch(`${APP.apiBase}/api/${endpoint}`);
+            const response = await fetch(`${APP.apiBase}/api/${endpoint}`, {
+                credentials: 'same-origin'
+            });
             return await response.json();
         } catch (error) {
             console.error('API Error:', error);
@@ -151,6 +153,7 @@ const API = {
         try {
             const response = await fetch(`${APP.apiBase}/api/${endpoint}`, {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
@@ -165,6 +168,7 @@ const API = {
         try {
             const response = await fetch(`${APP.apiBase}/api/${endpoint}`, {
                 method: 'PUT',
+                credentials: 'same-origin',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
@@ -178,7 +182,8 @@ const API = {
     async delete(endpoint) {
         try {
             const response = await fetch(`${APP.apiBase}/api/${endpoint}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                credentials: 'same-origin'
             });
             return await response.json();
         } catch (error) {
@@ -193,13 +198,27 @@ const API = {
 // ============================================
 const Auth = {
     user: null,
+    ready: null,
 
-    async init() {
-        const result = await API.get('auth.php?action=check');
-        if (result.success && result.authenticated) {
-            this.user = result.user;
-            this.updateUI();
+    init() {
+        if (!this.ready) {
+            this.ready = (async () => {
+                const result = await API.get('auth.php?action=check');
+                this.user = result.success && result.authenticated ? result.user : null;
+
+                if (this.user?.role === 'admin' && !window.location.pathname.includes('/admin/')) {
+                    const adminPath = window.location.pathname.includes('/pages/')
+                        ? '../admin/index.php'
+                        : 'admin/index.php';
+                    window.location.replace(adminPath);
+                    return this.user;
+                }
+
+                this.updateUI();
+                return this.user;
+            })();
         }
+        return this.ready;
     },
 
     async login(email, password) {
@@ -208,6 +227,7 @@ const Auth = {
             this.user = result.user;
             this.updateUI();
             Toast.show('Welcome back!', 'success');
+            window.dispatchEvent(new CustomEvent('auth:changed', { detail: { user: this.user } }));
         }
         return result;
     },
@@ -218,6 +238,7 @@ const Auth = {
             this.user = result.user;
             this.updateUI();
             Toast.show('Account created successfully!', 'success');
+            window.dispatchEvent(new CustomEvent('auth:changed', { detail: { user: this.user } }));
         }
         return result;
     },
@@ -226,6 +247,7 @@ const Auth = {
         await API.post('auth.php?action=logout', {});
         this.user = null;
         this.updateUI();
+        window.dispatchEvent(new CustomEvent('auth:changed', { detail: { user: null } }));
         Toast.show('Logged out successfully', 'info');
         setTimeout(() => window.location.href = '/', 1000);
     },
@@ -234,11 +256,19 @@ const Auth = {
         const authLinks = document.querySelectorAll('.auth-links');
         const userLinks = document.querySelectorAll('.user-links');
         const userName = document.querySelectorAll('.user-name');
+        const customerNotificationLinks = document.querySelectorAll('.customer-notification-links');
+        const customerUserLinks = document.querySelectorAll('.customer-user-links');
 
         if (this.user) {
             authLinks.forEach(el => el.style.display = 'none');
             userLinks.forEach(el => el.style.display = 'block');
             userName.forEach(el => el.textContent = this.user.name);
+            customerNotificationLinks.forEach(el => {
+                el.style.display = this.isAdmin() ? 'none' : 'block';
+            });
+            customerUserLinks.forEach(el => {
+                el.style.display = this.isAdmin() ? 'none' : 'block';
+            });
         } else {
             authLinks.forEach(el => el.style.display = 'block');
             userLinks.forEach(el => el.style.display = 'none');
@@ -253,6 +283,85 @@ const Auth = {
         return this.user && this.user.role === 'admin';
     }
 };
+
+// ============================================
+// CUSTOMER NOTIFICATIONS
+// ============================================
+function escapeAppHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+const Notifications = {
+    timer: null,
+
+    async init() {
+        await Auth.init();
+        await this.load();
+        if (!this.timer) {
+            this.timer = window.setInterval(() => this.load(), 30000);
+        }
+    },
+
+    async load() {
+        if (!Auth.isLoggedIn() || Auth.isAdmin()) {
+            this.clear();
+            return;
+        }
+
+        const result = await API.get('notifications.php');
+        if (result.success) {
+            this.render(result.data || [], Number(result.unread_count || 0));
+        }
+    },
+
+    render(items, unreadCount) {
+        const list = document.getElementById('notificationList');
+        const badge = document.getElementById('notificationBadge');
+        if (!list || !badge) return;
+
+        badge.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
+        badge.style.display = unreadCount > 0 ? 'block' : 'none';
+
+        if (!items.length) {
+            list.innerHTML = '<div class="notification-empty">No notifications yet</div>';
+            return;
+        }
+
+        list.innerHTML = items.map(item => `
+            <button type="button" class="notification-item ${Number(item.is_read) ? '' : 'unread'}" onclick="Notifications.open(${Number(item.id)})">
+                <strong>${escapeAppHtml(item.title)}</strong>
+                <span>${escapeAppHtml(item.message)}</span>
+                <small>${formatDate(item.created_at)}</small>
+            </button>
+        `).join('');
+    },
+
+    async open(id) {
+        await API.post('notifications.php', { id });
+        const ordersPath = window.location.pathname.includes('/pages/') ? 'orders.php' : 'pages/orders.php';
+        window.location.href = ordersPath;
+    },
+
+    async markAllRead() {
+        if (!Auth.isLoggedIn()) return;
+        await API.post('notifications.php', { all: true });
+        await this.load();
+    },
+
+    clear() {
+        const list = document.getElementById('notificationList');
+        const badge = document.getElementById('notificationBadge');
+        if (list) list.innerHTML = '<div class="notification-empty">No notifications yet</div>';
+        if (badge) badge.style.display = 'none';
+    }
+};
+
+window.addEventListener('auth:changed', () => Notifications.load());
 
 // ============================================
 // SCROLL ANIMATIONS
@@ -391,6 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Cart.init();
     Toast.init();
     Auth.init();
+    Notifications.init();
     NavbarScroll.init();
     ScrollAnimations.init();
 

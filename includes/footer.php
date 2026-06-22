@@ -62,7 +62,7 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- App JS -->
-    <script src="<?= isset($isSubPage) ? '../' : '' ?>assets/js/app.js"></script>
+    <script src="<?= isset($isSubPage) ? '../' : '' ?>assets/js/app.js?v=1.0.5"></script>
     
     <script>
         // Auth handlers

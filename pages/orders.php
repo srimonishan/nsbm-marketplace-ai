@@ -5,6 +5,11 @@
 $isSubPage = true;
 $pageTitle = 'My Orders';
 require_once __DIR__ . '/../config/init.php';
+
+if (isAdmin()) {
+    redirect('../admin/index.php');
+}
+
 include __DIR__ . '/../includes/header.php';
 ?>
 
@@ -36,6 +41,11 @@ $extraScripts = '
 <script>
 async function loadOrders() {
     const content = document.getElementById("ordersContent");
+
+    // Wait for the server-side session check before deciding whether the user
+    // is logged in. Without this, the page can render the login prompt while
+    // the navbar is still loading the authenticated user.
+    await Auth.init();
     
     if (!Auth.isLoggedIn()) {
         content.innerHTML = `
@@ -94,8 +104,10 @@ async function loadOrders() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(loadOrders, 500);
+    loadOrders();
 });
+
+window.addEventListener("auth:changed", loadOrders);
 </script>';
 include __DIR__ . '/../includes/footer.php';
 ?>

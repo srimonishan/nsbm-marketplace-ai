@@ -2,8 +2,7 @@
 /**
  * Admin Login Page - GreenLink Market
  */
-session_start();
-require_once __DIR__ . '/../config/app.php';
+require_once __DIR__ . '/../config/init.php';
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -58,11 +57,6 @@ require_once __DIR__ . '/../config/app.php';
                 </button>
             </form>
 
-            <div class="text-center mt-4">
-                <p class="text-muted-custom small mb-1">Demo Credentials:</p>
-                <p class="text-muted-custom small mb-0">Email: admin@nsbm.ac.lk | Pass: admin123</p>
-            </div>
-
             <div class="text-center mt-3">
                 <a href="../index.php" class="text-muted-custom small"><i class="bi bi-arrow-left me-1"></i>Back to Store</a>
             </div>
@@ -86,7 +80,11 @@ require_once __DIR__ . '/../config/app.php';
         try {
             const response = await fetch('../api/auth.php?action=login', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-GreenLink-Portal': 'admin'
+                },
                 body: JSON.stringify(data)
             });
             const result = await response.json();

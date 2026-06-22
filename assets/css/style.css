@@ -821,6 +821,16 @@ a:hover {
     color: var(--text-muted);
 }
 
+select.form-control-custom {
+    color-scheme: dark;
+    cursor: pointer;
+}
+
+select.form-control-custom option {
+    background-color: #10251b;
+    color: #f4fbf7;
+}
+
 .form-label-custom {
     color: var(--text-secondary);
     font-weight: 500;

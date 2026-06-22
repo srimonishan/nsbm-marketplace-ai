@@ -19,7 +19,7 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="<?= isset($isSubPage) ? '../' : '' ?>assets/css/style.css" rel="stylesheet">
+    <link href="<?= isset($isSubPage) ? '../' : '' ?>assets/css/style.css?v=1.0.1" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->

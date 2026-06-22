@@ -163,7 +163,7 @@ nsbm-marketplace-ai/
 │   ├── Review.php
 │   └── User.php
 ├── pages/                  # Customer pages
-│   ├── about.php
+│   ├── about.html
 │   ├── cart.php
 │   ├── categories.php
 │   ├── checkout.php

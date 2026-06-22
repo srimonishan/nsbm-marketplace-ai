@@ -81,7 +81,6 @@ include __DIR__ . '/includes/header.php';
                                 <h4>Smart shopping for campus life</h4>
                                 <p>Discover what you need, when you need it.</p>
                             </div>
-                            <span class="hero-ai-chip"><i class="bi bi-stars me-1"></i>AI powered</span>
                         </div>
                     </div>
                 </div>

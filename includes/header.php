@@ -52,7 +52,7 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= $currentPage === 'about' ? 'active' : '' ?>" href="<?= isset($isSubPage) ? '' : 'pages/' ?>about.php">
+                        <a class="nav-link <?= $currentPage === 'about' ? 'active' : '' ?>" href="<?= isset($isSubPage) ? '' : 'pages/' ?>about.html">
                             <i class="bi bi-info-circle me-1"></i> About
                         </a>
                     </li>

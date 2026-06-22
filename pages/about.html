@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GreenLink Market - Premium AI-Powered Shopping for NSBM Green University Students">
+    <title>About Us | GreenLink Market</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="../index.php">
+                <span class="brand-icon"><i class="bi bi-shop"></i></span>
+                GreenLink Market
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link " href="../index.php">
+                            <i class="bi bi-house-door me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="products.php">
+                            <i class="bi bi-grid me-1"></i> Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="categories.php">
+                            <i class="bi bi-collection me-1"></i> Categories
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="about.html">
+                            <i class="bi bi-info-circle me-1"></i> About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="contact.php">
+                            <i class="bi bi-envelope me-1"></i> Contact
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Search -->
+                    <button class="btn btn-glass btn-sm" data-bs-toggle="modal" data-bs-target="#searchModal">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    
+                    <!-- Cart -->
+                    <a href="cart.php" class="btn btn-glass btn-sm position-relative">
+                        <i class="bi bi-cart3"></i>
+                        <span class="nav-cart-badge cart-count" style="display:none;">0</span>
+                    </a>
+                    
+                    <!-- Auth Links -->
+                    <div class="auth-links">
+                        <button class="btn btn-primary-custom btn-sm" data-bs-toggle="modal" data-bs-target="#authModal">
+                            <i class="bi bi-person me-1"></i> Login
+                        </button>
+                    </div>
+                    
+                    <!-- User Links (shown when logged in) -->
+                    <div class="user-links dropdown" style="display:none;">
+                        <button class="btn btn-glass btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i> <span class="user-name">User</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" style="background:var(--bg-card);border:1px solid var(--border-glass);">
+                            <li><a class="dropdown-item text-light" href="orders.php"><i class="bi bi-bag me-2"></i>My Orders</a></li>
+                            <li><a class="dropdown-item text-light" href="../admin/index.php"><i class="bi bi-speedometer2 me-2"></i>Admin Panel</a></li>
+                            <li><hr class="dropdown-divider" style="border-color:var(--border-glass);"></li>
+                            <li><a class="dropdown-item text-light" href="#" onclick="Auth.logout()"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Modal -->
+    <div class="modal fade modal-custom" id="searchModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body p-4">
+                    <form action="products.php" method="GET">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control form-control-custom form-control-lg" placeholder="Search products..." autofocus>
+                            <button class="btn btn-primary-custom" type="submit">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal fade modal-custom" id="authModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <ul class="nav nav-pills w-100" id="authTabs">
+                        <li class="nav-item flex-fill">
+                            <button class="nav-link active w-100 btn-glass" data-bs-toggle="pill" data-bs-target="#loginTab">Login</button>
+                        </li>
+                        <li class="nav-item flex-fill">
+                            <button class="nav-link w-100 btn-glass" data-bs-toggle="pill" data-bs-target="#registerTab">Register</button>
+                        </li>
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="tab-content">
+                        <!-- Login Tab -->
+                        <div class="tab-pane fade show active" id="loginTab">
+                            <form id="loginForm" onsubmit="handleLogin(event)">
+                                <div class="mb-3">
+                                    <label class="form-label-custom">Email</label>
+                                    <input type="email" name="email" class="form-control form-control-custom" placeholder="your@nsbm.ac.lk" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label-custom">Password</label>
+                                    <input type="password" name="password" class="form-control form-control-custom" placeholder="Enter password" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary-custom w-100">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                                </button>
+                                <div class="text-center mt-3">
+                                    <a href="http://127.0.0.1:8000/admin/login.php" class="text-decoration-none">
+                                        <i class="bi bi-shield-lock me-1"></i>Admin Login
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- Register Tab -->
+                        <div class="tab-pane fade" id="registerTab">
+                            <form id="registerForm" onsubmit="handleRegister(event)">
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label-custom">First Name</label>
+                                        <input type="text" name="first_name" class="form-control form-control-custom" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label-custom">Last Name</label>
+                                        <input type="text" name="last_name" class="form-control form-control-custom" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label-custom">Email</label>
+                                    <input type="email" name="email" class="form-control form-control-custom" placeholder="your@students.nsbm.ac.lk" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label-custom">Password</label>
+                                    <input type="password" name="password" class="form-control form-control-custom" placeholder="Min 8 characters" required minlength="8">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label-custom">Confirm Password</label>
+                                    <input type="password" name="confirm_password" class="form-control form-control-custom" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary-custom w-100">
+                                    <i class="bi bi-person-plus me-2"></i>Create Account
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-info-circle me-2"></i>About Us</h1>
+        <nav class="breadcrumb-custom">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="../index.php">Home</a></li>
+                <li class="breadcrumb-item active">About</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <!-- About Content -->
+        <div class="row g-5 align-items-center mb-5">
+            <div class="col-lg-6" data-animate>
+                <span class="badge-glass mb-3"><i class="bi bi-mortarboard me-1"></i> NSBM Green University</span>
+                <h2 class="section-title">The Future of <span class="text-gradient">Campus Shopping</span></h2>
+                <p class="text-muted-custom" style="line-height:1.8;">
+                    GreenLink Market is the premier AI-powered e-commerce platform designed exclusively for NSBM Green University students and staff. 
+                    We combine cutting-edge artificial intelligence with a curated selection of products to deliver a shopping experience that's smart, 
+                    personalized, and perfectly tailored to campus life.
+                </p>
+                <p class="text-muted-custom" style="line-height:1.8;">
+                    Founded by students, for students — our platform leverages Google's Gemini AI to provide intelligent product recommendations, 
+                    a conversational shopping assistant, and dynamic content that evolves with your needs.
+                </p>
+                <div class="row g-3 mt-3">
+                    <div class="col-6">
+                        <div class="glass-card text-center p-3">
+                            <h3 class="text-gradient mb-0" data-count="500">500+</h3>
+                            <small class="text-muted-custom">Products</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="glass-card text-center p-3">
+                            <h3 class="text-gradient mb-0" data-count="2000">2000+</h3>
+                            <small class="text-muted-custom">Happy Students</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-animate>
+                <div class="glass-card p-5 text-center">
+                    <div style="font-size:5rem;margin-bottom:1rem;">🎓</div>
+                    <h3 class="text-gradient">NSBM Green University</h3>
+                    <p class="text-muted-custom">Sri Lanka's Premier Non-State University</p>
+                    <p class="text-muted-custom small">Mahenwaththa, Pitipana, Homagama</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="row g-4 mt-5">
+            <div class="col-12 text-center mb-4" data-animate>
+                <h2 class="section-title">Why Choose <span class="text-gradient">Us</span></h2>
+            </div>
+            <div class="col-lg-4 col-md-6" data-animate>
+                <div class="glass-card text-center h-100">
+                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #087a4b, #16a66a);">
+                        <i class="bi bi-robot"></i>
+                    </div>
+                    <h5>AI-Powered</h5>
+                    <p class="text-muted-custom small">Gemini AI integration for smart recommendations, gift suggestions, and personalized shopping.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-animate>
+                <div class="glass-card text-center h-100">
+                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #b6e34a, #d0f27c);">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h5>Secure & Safe</h5>
+                    <p class="text-muted-custom small">Enterprise-grade security with encrypted transactions and secure authentication.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-animate>
+                <div class="glass-card text-center h-100">
+                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #f2b84b, #ffd477);">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h5>Community First</h5>
+                    <p class="text-muted-custom small">Built by NSBM students, for NSBM students. Supporting campus entrepreneurs.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-animate>
+                <div class="glass-card text-center h-100">
+                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #ffc107, #ffcd38);">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <h5>Campus Delivery</h5>
+                    <p class="text-muted-custom small">Fast delivery right to your dorm or campus location. Free shipping over Rs. 10,000.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-animate>
+                <div class="glass-card text-center h-100">
+                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #17a2b8, #3dc5d8);">
+                        <i class="bi bi-star"></i>
+                    </div>
+                    <h5>Quality Products</h5>
+                    <p class="text-muted-custom small">Curated selection of premium products verified for quality and student-friendly pricing.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-animate>
+                <div class="glass-card text-center h-100">
+                    <div class="category-icon mx-auto mb-3" style="background:linear-gradient(135deg, #6610f2, #8540f5);">
+                        <i class="bi bi-headset"></i>
+                    </div>
+                    <h5>24/7 AI Support</h5>
+                    <p class="text-muted-custom small">Our AI assistant is always available to help you find what you need.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="text-center mt-5 pt-5" data-animate>
+            <h2 class="section-title mb-4">Our <span class="text-gradient">Technology</span></h2>
+            <div class="row g-3 justify-content-center">
+                <div class="col-auto"><span class="badge-glass"><i class="bi bi-filetype-php me-1"></i>PHP 8+</span></div>
+                <div class="col-auto"><span class="badge-glass"><i class="bi bi-database me-1"></i>MySQL</span></div>
+                <div class="col-auto"><span class="badge-glass"><i class="bi bi-bootstrap me-1"></i>Bootstrap 5</span></div>
+                <div class="col-auto"><span class="badge-glass"><i class="bi bi-filetype-js me-1"></i>Vanilla JS</span></div>
+                <div class="col-auto"><span class="badge-glass"><i class="bi bi-stars me-1"></i>Gemini AI</span></div>
+                <div class="col-auto"><span class="badge-glass"><i class="bi bi-shield-lock me-1"></i>PDO Security</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand">GreenLink Market</div>
+                    <p class="footer-text">
+                        The premier AI-powered marketplace exclusively for NSBM Green University students and staff. 
+                        Discover, shop, and experience intelligent shopping like never before.
+                    </p>
+                    <div class="d-flex gap-3 mt-3">
+                        <a href="#" class="btn btn-glass btn-sm"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="btn btn-glass btn-sm"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="btn btn-glass btn-sm"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="btn btn-glass btn-sm"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="../index.php">Home</a></li>
+                        <li><a href="products.php">Products</a></li>
+                        <li><a href="categories.php">Categories</a></li>
+                        <li><a href="cart.php">Cart</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-title">Support</h5>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.php">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="footer-title">Contact Info</h5>
+                    <ul class="footer-links">
+                        <li><i class="bi bi-geo-alt me-2 text-primary"></i>Mahenwaththa, Pitipana, Homagama</li>
+                        <li><i class="bi bi-telephone me-2 text-primary"></i>+94 11 544 5000</li>
+                        <li><i class="bi bi-envelope me-2 text-primary"></i>marketplace@nsbm.ac.lk</li>
+                        <li><i class="bi bi-clock me-2 text-primary"></i>Mon - Fri: 8:00 AM - 6:00 PM</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 GreenLink Market. All rights reserved. Built with <i class="bi bi-heart-fill text-danger"></i> for NSBM Green University.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AI Chat Widget -->
+    <!-- AI Chat Widget -->
+<div class="ai-chat-widget" id="aiChatWidget">
+    <!-- Chat Toggle Button -->
+    <button class="ai-chat-toggle" id="aiChatToggle" onclick="toggleAIChat()">
+        <i class="bi bi-robot"></i>
+        <span class="ai-chat-pulse"></span>
+    </button>
+
+    <!-- Chat Window -->
+    <div class="ai-chat-window" id="aiChatWindow">
+        <div class="ai-chat-header">
+            <div class="ai-chat-identity">
+                <div class="ai-chat-avatar">
+                    <i class="bi bi-robot"></i>
+                </div>
+                <div class="ai-chat-title-wrap">
+                    <h6>AI Shopping Assistant</h6>
+                    <small><span class="ai-status-dot"></span>Online · Powered by Gemini</small>
+                </div>
+            </div>
+            <div class="ai-chat-actions">
+                <button class="ai-header-action active" onclick="switchAIMode('shop')" id="modeShop" title="Shopping Assistant" aria-label="Shopping Assistant">
+                    <i class="bi bi-bag"></i>
+                </button>
+                <button class="ai-header-action" onclick="switchAIMode('gift')" id="modeGift" title="Gift Recommender" aria-label="Gift Recommender">
+                    <i class="bi bi-gift"></i>
+                </button>
+                <button class="ai-header-action" onclick="toggleAIChat()" title="Close assistant" aria-label="Close assistant">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="ai-chat-messages" id="aiChatMessages">
+            <div class="ai-message ai-message-bot">
+                <div class="ai-message-avatar"><i class="bi bi-robot"></i></div>
+                <div class="ai-message-content">
+                    <p>Hello! I'm your AI Shopping Assistant for GreenLink Market. I can help you:</p>
+                    <ul>
+                        <li>Find products you need</li>
+                        <li>Get personalized recommendations</li>
+                        <li>Suggest perfect gifts</li>
+                    </ul>
+                    <p>How can I help you today?</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="ai-chat-quick" id="aiQuickActions">
+            <button class="btn btn-glass btn-sm" onclick="sendQuickMessage('Show me popular products')">Popular Items</button>
+            <button class="btn btn-glass btn-sm" onclick="sendQuickMessage('What electronics do you have?')">Electronics</button>
+            <button class="btn btn-glass btn-sm" onclick="sendQuickMessage('Suggest a gift under Rs. 5000')">Gift Ideas</button>
+            <button class="btn btn-glass btn-sm" onclick="sendQuickMessage('What are the best deals?')">Best Deals</button>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="ai-chat-input">
+            <form onsubmit="sendAIMessage(event)" class="d-flex gap-2">
+                <input type="text" id="aiMessageInput" class="form-control form-control-custom" 
+                       placeholder="Ask me anything..." autocomplete="off">
+                <button type="submit" class="btn btn-primary-custom" id="aiSendBtn">
+                    <i class="bi bi-send"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.ai-chat-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.ai-chat-toggle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(8, 122, 75, 0.4);
+    transition: var(--transition);
+    position: relative;
+}
+
+.ai-chat-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 30px rgba(8, 122, 75, 0.6);
+}
+
+.ai-chat-pulse {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    width: 16px;
+    height: 16px;
+    background: var(--secondary);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.ai-chat-window {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 440px;
+    max-width: calc(100vw - 32px);
+    height: 640px;
+    max-height: calc(100vh - 110px);
+    background: rgba(5, 18, 12, 0.98);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(129, 217, 163, 0.28);
+    border-radius: var(--radius-lg);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.58), 0 0 0 1px rgba(255, 255, 255, 0.025) inset;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ai-chat-window.active {
+    display: flex;
+}
+
+.ai-chat-header {
+    min-height: 78px;
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid rgba(129, 217, 163, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, rgba(16, 45, 30, 0.98), rgba(7, 25, 17, 0.98));
+    gap: 0.75rem;
+}
+
+.ai-chat-identity {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-width: 0;
+}
+
+.ai-chat-avatar {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+.ai-chat-title-wrap {
+    min-width: 0;
+}
+
+.ai-chat-title-wrap h6 {
+    margin: 0 0 0.2rem;
+    color: var(--text-primary);
+    font-size: 0.94rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.ai-chat-title-wrap small {
+    display: flex;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    white-space: nowrap;
+}
+
+.ai-status-dot {
+    width: 7px;
+    height: 7px;
+    margin-right: 0.35rem;
+    background: var(--secondary);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(182, 227, 74, 0.8);
+}
+
+.ai-chat-actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 0.45rem;
+}
+
+.ai-header-action {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    transition: var(--transition);
+}
+
+.ai-header-action:hover,
+.ai-header-action.active {
+    color: white;
+    background: rgba(8, 122, 75, 0.2);
+    border-color: rgba(129, 217, 163, 0.6);
+}
+
+.ai-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    padding: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(8, 122, 75, 0.7) transparent;
+}
+
+.ai-chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ai-chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(8, 122, 75, 0.7);
+    border-radius: 10px;
+}
+
+.ai-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.ai-message-bot {
+    align-self: flex-start;
+}
+
+.ai-message-user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+    width: auto;
+    max-width: 84%;
+}
+
+.ai-message-avatar {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.ai-message-bot .ai-message-avatar {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.ai-message-user .ai-message-avatar {
+    background: var(--gradient-secondary);
+    color: white;
+}
+
+.ai-message-content {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    background: linear-gradient(145deg, rgba(18, 49, 33, 0.94), rgba(9, 29, 19, 0.96));
+    border: 1px solid rgba(129, 217, 163, 0.22);
+    border-radius: 4px 16px 16px 16px;
+    padding: 0.95rem 1rem;
+    color: var(--text-secondary);
+    font-size: 0.86rem;
+    line-height: 1.65;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.ai-message-content p:last-child {
+    margin-bottom: 0;
+}
+
+.ai-message-content ul {
+    padding-left: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.ai-product-suggestions {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ai-product-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    gap: 0.8rem;
+    padding: 0.8rem 0.85rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    background: linear-gradient(135deg, rgba(8, 122, 75, 0.14), rgba(182, 227, 74, 0.05));
+    border: 1px solid rgba(75, 191, 123, 0.42);
+    border-radius: 12px;
+    transition: var(--transition);
+}
+
+.ai-product-link:hover {
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.ai-product-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.ai-product-name {
+    display: block;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ai-product-price {
+    display: block;
+    margin-top: 0.15rem;
+    color: var(--secondary);
+    font-size: 0.75rem;
+}
+
+.ai-product-action {
+    flex-shrink: 0;
+    padding: 0.48rem 0.7rem;
+    color: white;
+    background: var(--gradient-primary);
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ai-message-user .ai-message-content {
+    flex: initial;
+    background: linear-gradient(135deg, rgba(8, 122, 75, 0.3), rgba(6, 91, 57, 0.26));
+    border-color: rgba(75, 191, 123, 0.58);
+    border-radius: 16px 4px 16px 16px;
+    color: var(--text-primary);
+}
+
+.ai-chat-quick {
+    padding: 0.8rem 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    overflow: hidden;
+    border-top: 1px solid rgba(129, 217, 163, 0.18);
+    background: rgba(6, 22, 14, 0.96);
+}
+
+.ai-chat-quick .btn {
+    width: 100%;
+    min-width: 0;
+    padding: 0.48rem 0.35rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.68rem;
+}
+
+.ai-chat-input {
+    padding: 0.9rem 1rem 1rem;
+    border-top: 1px solid rgba(129, 217, 163, 0.18);
+    background: rgba(9, 29, 19, 0.98);
+}
+
+.ai-chat-input form {
+    min-width: 0;
+}
+
+.ai-chat-input .form-control {
+    min-width: 0;
+    height: 44px;
+    padding-inline: 1rem;
+    border-radius: 999px;
+    font-size: 0.84rem;
+}
+
+.ai-chat-input #aiSendBtn {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+}
+
+.ai-typing {
+    display: flex;
+    gap: 4px;
+    padding: 0.5rem 0;
+}
+
+.ai-typing span {
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: typing 1.4s infinite;
+}
+
+.ai-typing span:nth-child(2) { animation-delay: 0.2s; }
+.ai-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50% { transform: translateY(-5px); opacity: 1; }
+}
+
+@media (max-width: 576px) {
+    .ai-chat-window {
+        width: calc(100vw - 24px);
+        right: -8px;
+        height: min(640px, calc(100vh - 96px));
+        bottom: 70px;
+    }
+
+    .ai-chat-header {
+        min-height: 72px;
+        padding: 0.85rem;
+    }
+
+    .ai-header-action {
+        width: 34px;
+        height: 34px;
+    }
+
+    .ai-chat-messages {
+        padding: 0.85rem;
+    }
+
+    .ai-message-avatar {
+        display: none;
+    }
+
+    .ai-message-user {
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 390px) {
+    .ai-chat-title-wrap small {
+        max-width: 125px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+</style>
+
+<script>
+let aiChatOpen = false;
+let aiMode = 'shop'; // 'shop' or 'gift'
+let chatContext = [];
+
+function toggleAIChat() {
+    aiChatOpen = !aiChatOpen;
+    const window = document.getElementById('aiChatWindow');
+    const toggle = document.getElementById('aiChatToggle');
+    
+    if (aiChatOpen) {
+        window.classList.add('active');
+        toggle.innerHTML = '<i class="bi bi-x-lg"></i>';
+        document.getElementById('aiMessageInput').focus();
+    } else {
+        window.classList.remove('active');
+        toggle.innerHTML = '<i class="bi bi-robot"></i><span class="ai-chat-pulse"></span>';
+    }
+}
+
+function switchAIMode(mode) {
+    aiMode = mode;
+    document.getElementById('modeShop').classList.toggle('active', mode === 'shop');
+    document.getElementById('modeGift').classList.toggle('active', mode === 'gift');
+    
+    const placeholder = mode === 'gift' 
+        ? 'Describe the gift you need...' 
+        : 'Ask me anything...';
+    document.getElementById('aiMessageInput').placeholder = placeholder;
+}
+
+function sendQuickMessage(message) {
+    document.getElementById('aiMessageInput').value = message;
+    sendAIMessage(new Event('submit'));
+}
+
+async function sendAIMessage(e) {
+    e.preventDefault();
+    
+    const input = document.getElementById('aiMessageInput');
+    const message = input.value.trim();
+    if (!message) return;
+    
+    // Add user message
+    addChatMessage(message, 'user');
+    input.value = '';
+    // Send only the previous conversation as context. The backend receives the
+    // current message separately, so including it here would duplicate it.
+    const previousContext = chatContext.slice(-6);
+    chatContext.push({ role: 'user', content: message });
+    
+    // Show typing indicator
+    showTyping();
+    
+    try {
+        const endpoint = aiMode === 'gift' ? 'ai.php?action=gift' : 'ai.php?action=chat';
+        const body = aiMode === 'gift' 
+            ? { request: message }
+            : { message: message, context: previousContext };
+        
+        // The widget is rendered on both the root homepage and pages/ routes.
+        // Generate the correct relative API path server-side instead of reading
+        // the non-existent API.baseUrl JavaScript property.
+        const baseUrl = "..\/api\/";
+        const response = await fetch(baseUrl + endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        
+        const result = await response.json();
+        removeTyping();
+
+        if (!response.ok) {
+            throw new Error(result.message || `AI request failed (${response.status})`);
+        }
+        
+        if (result.success && result.data && result.data.reply) {
+            addChatMessage(result.data.reply, 'bot', result.data.products || []);
+            chatContext.push({ role: 'assistant', content: result.data.reply });
+        } else {
+            addChatMessage(result.message || "I'm sorry, I couldn't process that request. Please try again or rephrase your question.", 'bot');
+        }
+    } catch (error) {
+        removeTyping();
+        console.error('AI chat request failed:', error);
+        addChatMessage("I'm having trouble connecting right now. Please try again in a moment.", 'bot');
+    }
+}
+
+function escapeChatHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function addChatMessage(content, role, products = []) {
+    const messagesDiv = document.getElementById('aiChatMessages');
+    const messageEl = document.createElement('div');
+    messageEl.className = `ai-message ai-message-${role}`;
+    
+    // Convert markdown-like formatting
+    let formattedContent = escapeChatHtml(content)
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br>')
+        .replace(/• /g, '&bull; ');
+    
+    const icon = role === 'bot' ? 'bi-robot' : 'bi-person';
+    const productLinks = products.length ? `
+        <div class="ai-product-suggestions">
+            ${products.map(product => `
+                <a class="ai-product-link" href="${escapeChatHtml(product.url)}">
+                    <span class="ai-product-info">
+                        <span class="ai-product-name">${escapeChatHtml(product.name)}</span>
+                        <span class="ai-product-price">${formatPrice(product.price)}</span>
+                    </span>
+                    <span class="ai-product-action">View Product</span>
+                </a>
+            `).join('')}
+        </div>
+    ` : '';
+    messageEl.innerHTML = `
+        <div class="ai-message-avatar"><i class="bi ${icon}"></i></div>
+        <div class="ai-message-content">${formattedContent}${productLinks}</div>
+    `;
+    
+    messagesDiv.appendChild(messageEl);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function showTyping() {
+    const messagesDiv = document.getElementById('aiChatMessages');
+    const typingEl = document.createElement('div');
+    typingEl.className = 'ai-message ai-message-bot';
+    typingEl.id = 'aiTyping';
+    typingEl.innerHTML = `
+        <div class="ai-message-avatar"><i class="bi bi-robot"></i></div>
+        <div class="ai-message-content">
+            <div class="ai-typing"><span></span><span></span><span></span></div>
+        </div>
+    `;
+    messagesDiv.appendChild(typingEl);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function removeTyping() {
+    const typing = document.getElementById('aiTyping');
+    if (typing) typing.remove();
+}
+</script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- App JS -->
+    <script src="../assets/js/app.js"></script>
+    
+    <script>
+        // Auth handlers
+        async function handleLogin(e) {
+            e.preventDefault();
+            const form = e.target;
+            const result = await Auth.login(
+                form.email.value,
+                form.password.value
+            );
+            if (result.success) {
+                bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
+                if (result.user.role === 'admin') {
+                    setTimeout(() => window.location.href = '../admin/index.php', 500);
+                }
+            } else {
+                Toast.show(result.message || 'Login failed', 'error');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const form = e.target;
+            const result = await Auth.register({
+                first_name: form.first_name.value,
+                last_name: form.last_name.value,
+                email: form.email.value,
+                password: form.password.value,
+                confirm_password: form.confirm_password.value
+            });
+            if (result.success) {
+                bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
+            } else {
+                Toast.show(result.message || 'Registration failed', 'error');
+            }
+        }
+    </script>
+    </body>
+</html>

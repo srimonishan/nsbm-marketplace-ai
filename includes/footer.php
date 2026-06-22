@@ -29,7 +29,7 @@
                 <div class="col-lg-2 col-md-6">
                     <h5 class="footer-title">Support</h5>
                     <ul class="footer-links">
-                        <li><a href="<?= isset($isSubPage) ? '' : 'pages/' ?>about.php">About Us</a></li>
+                        <li><a href="<?= isset($isSubPage) ? '' : 'pages/' ?>about.html">About Us</a></li>
                         <li><a href="<?= isset($isSubPage) ? '' : 'pages/' ?>contact.php">Contact</a></li>
                         <li><a href="#">FAQ</a></li>
                         <li><a href="#">Privacy Policy</a></li>

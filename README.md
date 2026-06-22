@@ -122,8 +122,8 @@ remain available after stopping and restarting the development server.
 | Role | Email | Password |
 |------|-------|----------|
 | Admin | admin@nsbm.ac.lk | admin123 |
-| Customer | student1@students.nsbm.ac.lk | student123 |
-| Customer | student2@students.nsbm.ac.lk | student123 |
+| Sri Monishan | sri.monishan@students.nsbm.ac.lk | student123 |
+| Test User NSBM | test.user@students.nsbm.ac.lk | student123 |
 
 ## Project Structure
 

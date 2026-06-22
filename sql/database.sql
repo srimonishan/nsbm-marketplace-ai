@@ -213,7 +213,9 @@ INSERT INTO users (first_name, last_name, email, password, role, status, email_v
 ('Kasun', 'Perera', 'kasun@students.nsbm.ac.lk', '$2y$10$Lpos00shhOtbHJZTfvb/e.w7WyNnCdOlylB9b5J17FWGRUTQWGlmi', 'customer', 'active', NOW()),
 ('Nethmi', 'Silva', 'nethmi@students.nsbm.ac.lk', '$2y$10$Lpos00shhOtbHJZTfvb/e.w7WyNnCdOlylB9b5J17FWGRUTQWGlmi', 'customer', 'active', NOW()),
 ('Dinesh', 'Fernando', 'dinesh@students.nsbm.ac.lk', '$2y$10$Lpos00shhOtbHJZTfvb/e.w7WyNnCdOlylB9b5J17FWGRUTQWGlmi', 'customer', 'active', NOW()),
-('Sachini', 'Jayawardena', 'sachini@students.nsbm.ac.lk', '$2y$10$Lpos00shhOtbHJZTfvb/e.w7WyNnCdOlylB9b5J17FWGRUTQWGlmi', 'customer', 'active', NOW());
+('Sachini', 'Jayawardena', 'sachini@students.nsbm.ac.lk', '$2y$10$Lpos00shhOtbHJZTfvb/e.w7WyNnCdOlylB9b5J17FWGRUTQWGlmi', 'customer', 'active', NOW()),
+('Sri', 'Monishan', 'sri.monishan@students.nsbm.ac.lk', '$2y$10$Lpos00shhOtbHJZTfvb/e.w7WyNnCdOlylB9b5J17FWGRUTQWGlmi', 'customer', 'active', NOW()),
+('Test', 'User NSBM', 'test.user@students.nsbm.ac.lk', '$2y$10$Lpos00shhOtbHJZTfvb/e.w7WyNnCdOlylB9b5J17FWGRUTQWGlmi', 'customer', 'active', NOW());
 
 -- ============================================
 -- SAMPLE DATA - CATEGORIES

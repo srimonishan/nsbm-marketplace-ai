@@ -387,15 +387,15 @@
                     <i class="bi bi-robot"></i>
                 </div>
                 <div class="ai-chat-title-wrap">
-                    <h6>AI Shopping Assistant</h6>
+                    <h6 id="aiChatTitle">AI Shopping Assistant</h6>
                     <small><span class="ai-status-dot"></span>Online · Powered by Gemini</small>
                 </div>
             </div>
             <div class="ai-chat-actions">
-                <button class="ai-header-action active" onclick="switchAIMode('shop')" id="modeShop" title="Shopping Assistant" aria-label="Shopping Assistant">
+                <button type="button" class="ai-header-action active" onclick="switchAIMode('shop')" id="modeShop" title="Shopping Assistant" aria-label="Shopping Assistant" aria-pressed="true">
                     <i class="bi bi-bag"></i>
                 </button>
-                <button class="ai-header-action" onclick="switchAIMode('gift')" id="modeGift" title="Gift Recommender" aria-label="Gift Recommender">
+                <button type="button" class="ai-header-action" onclick="switchAIMode('gift')" id="modeGift" title="Gift Recommender" aria-label="Gift Recommender" aria-pressed="false">
                     <i class="bi bi-gift"></i>
                 </button>
                 <button class="ai-header-action" onclick="toggleAIChat()" title="Close assistant" aria-label="Close assistant">
@@ -421,10 +421,10 @@
 
         <!-- Quick Actions -->
         <div class="ai-chat-quick" id="aiQuickActions">
-            <button class="btn btn-glass btn-sm" onclick="sendQuickMessage('Show me popular products')">Popular Items</button>
-            <button class="btn btn-glass btn-sm" onclick="sendQuickMessage('What electronics do you have?')">Electronics</button>
-            <button class="btn btn-glass btn-sm" onclick="sendQuickMessage('Suggest a gift under Rs. 5000')">Gift Ideas</button>
-            <button class="btn btn-glass btn-sm" onclick="sendQuickMessage('What are the best deals?')">Best Deals</button>
+            <button type="button" class="btn btn-glass btn-sm" data-prompt="Show me useful campus essentials for NSBM university life" onclick="fillQuickMessage(this.dataset.prompt)">Campus Essentials</button>
+            <button type="button" class="btn btn-glass btn-sm" data-prompt="Show me the most popular products among university students" onclick="fillQuickMessage(this.dataset.prompt)">Popular Items</button>
+            <button type="button" class="btn btn-glass btn-sm" data-prompt="Show me the best student-friendly deals currently available" onclick="fillQuickMessage(this.dataset.prompt)">Student Deals</button>
+            <button type="button" class="btn btn-glass btn-sm" data-prompt="Recommend useful study supplies and technology for an NSBM student" onclick="fillQuickMessage(this.dataset.prompt)">Study &amp; Tech</button>
         </div>
 
         <!-- Chat Input -->
@@ -591,11 +591,18 @@
     transition: var(--transition);
 }
 
-.ai-header-action:hover,
-.ai-header-action.active {
+.ai-header-action:hover {
     color: white;
     background: rgba(8, 122, 75, 0.2);
     border-color: rgba(129, 217, 163, 0.6);
+}
+
+.ai-header-action.active {
+    color: white;
+    background: var(--gradient-primary);
+    border-color: rgba(182, 227, 74, 0.85);
+    box-shadow: 0 0 0 2px rgba(182, 227, 74, 0.12), 0 6px 18px rgba(8, 122, 75, 0.32);
+    transform: translateY(-1px);
 }
 
 .ai-chat-messages {
@@ -867,6 +874,20 @@
 let aiChatOpen = false;
 let aiMode = 'shop'; // 'shop' or 'gift'
 let chatContext = [];
+const aiQuickPrompts = {
+    shop: [
+        ['Campus Essentials', 'Show me useful campus essentials for NSBM university life'],
+        ['Popular Items', 'Show me the most popular products among university students'],
+        ['Student Deals', 'Show me the best student-friendly deals currently available'],
+        ['Study & Tech', 'Recommend useful study supplies and technology for an NSBM student']
+    ],
+    gift: [
+        ["Valentine's Gifts", "Suggest a Valentine's Day gift for my partner under Rs. 5000"],
+        ['University Events', 'Suggest a special gift for an NSBM university event'],
+        ['Graduation Gifts', 'Recommend a graduation gift for an NSBM student'],
+        ['Birthday Gifts', 'Suggest a birthday gift for a university friend under Rs. 5000']
+    ]
+};
 
 function toggleAIChat() {
     aiChatOpen = !aiChatOpen;
@@ -884,19 +905,40 @@ function toggleAIChat() {
 }
 
 function switchAIMode(mode) {
+    if (mode !== 'shop' && mode !== 'gift') return;
+
     aiMode = mode;
-    document.getElementById('modeShop').classList.toggle('active', mode === 'shop');
-    document.getElementById('modeGift').classList.toggle('active', mode === 'gift');
+    const shopButton = document.getElementById('modeShop');
+    const giftButton = document.getElementById('modeGift');
+    const input = document.getElementById('aiMessageInput');
+    const isGiftMode = mode === 'gift';
+
+    shopButton.classList.toggle('active', !isGiftMode);
+    giftButton.classList.toggle('active', isGiftMode);
+    shopButton.setAttribute('aria-pressed', String(!isGiftMode));
+    giftButton.setAttribute('aria-pressed', String(isGiftMode));
+    document.getElementById('aiChatTitle').textContent = isGiftMode
+        ? 'AI Gift Recommender'
+        : 'AI Shopping Assistant';
+
+    document.querySelectorAll('#aiQuickActions button').forEach((button, index) => {
+        const [label, prompt] = aiQuickPrompts[mode][index];
+        button.textContent = label;
+        button.dataset.prompt = prompt;
+    });
     
-    const placeholder = mode === 'gift' 
+    const placeholder = isGiftMode
         ? 'Describe the gift you need...' 
         : 'Ask me anything...';
-    document.getElementById('aiMessageInput').placeholder = placeholder;
+    input.placeholder = placeholder;
+    input.focus();
 }
 
-function sendQuickMessage(message) {
-    document.getElementById('aiMessageInput').value = message;
-    sendAIMessage(new Event('submit'));
+function fillQuickMessage(message) {
+    const input = document.getElementById('aiMessageInput');
+    input.value = message;
+    input.focus();
+    input.setSelectionRange(input.value.length, input.value.length);
 }
 
 async function sendAIMessage(e) {
